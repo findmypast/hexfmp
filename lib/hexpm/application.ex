@@ -13,7 +13,7 @@ defmodule Hexpm.Application do
       supervisor(Hexpm.Repo, [], function: :init),
       supervisor(Hexpm.Slack.SlackRtm, [], function: :start),
       supervisor(Task.Supervisor, [[name: Hexpm.Tasks]]),
-      worker(PlugAttack.Storage.Ets, [Hexpm.PlugAttack, [clean_period: 60_000]]),
+      worker(PlugAttack.Storage.Ets, [Hexpm.Web.Plugs.Attack, [clean_period: 60_000]]),
       worker(Hexpm.Throttle, [[name: Hexpm.SESThrottle, rate: ses_rate, unit: 1000]]),
       supervisor(Hexpm.Web.Endpoint, []),
     ]
