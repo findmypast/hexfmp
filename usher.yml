@@ -62,14 +62,7 @@ tasks:
     do: sequence
     finally_task: dev_cleanup
     actions:
-      - do: global.docker.kill_containers
-        target_env: dev
-      - do: global.docker.compose_down
-        compose_filename: docker-compose/dev.yml
-        service_name: <%=base_service_name%>
-      - do: global.docker.compose_down
-        compose_filename: docker-compose/dev.yml
-        service_name: postgres
+      - do: dev_cleanup
       - do: global.docker.compose_up_detached
         compose_filename: docker-compose/dev.yml
         service_name: <%=base_service_name%>
@@ -89,10 +82,6 @@ tasks:
         target_env: dev
       - do: global.docker.compose_down
         compose_filename: docker-compose/dev.yml
-        service_name: <%=base_service_name%>
-      - do: global.docker.compose_down
-        compose_filename: docker-compose/dev.yml
-        service_name: postgres
 
   dev_unit:
     do: global.docker.compose_run
