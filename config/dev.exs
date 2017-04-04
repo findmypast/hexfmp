@@ -7,7 +7,7 @@ config :hexpm,
   private_key: File.read!("test/fixtures/private.pem")
 
 config :hexpm, Hexpm.Web.Endpoint,
-  http: [port: 4000],
+  http: [port: 4000, ip: {0, 0, 0, 0}],
   debug_errors: true,
   code_reloader: true,
   cache_static_lookup: false,
@@ -35,7 +35,7 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_dev",
-  hostname: "localhost",
+  hostname: "postgres",
   pool_size: 5
 
 config :hexpm, Hexpm.Emails.Mailer,

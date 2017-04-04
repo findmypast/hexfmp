@@ -57,6 +57,7 @@ defmodule Hexpm.Mixfile do
      {:sweet_xml, "~> 0.5"},
      {:plug_attack, "~> 0.3"},
      {:hackney, "~> 1.7"},
+     {:retry, "0.6.0"},
      {:ex_machina, "~> 2.0", only: [:dev, :test]},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:rollbax, "~> 0.5", only: :prod}]
@@ -66,7 +67,9 @@ defmodule Hexpm.Mixfile do
     ["compile.gpb": &compile_gpb/1,
      "ecto.setup": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
-     "test": ["ecto.migrate", "test"]]
+     "test": ["ecto.migrate", "test"],
+     "dev": ["wait_for_db", "phx.server"]
+    ]
   end
 
   defp compile_gpb(args) do

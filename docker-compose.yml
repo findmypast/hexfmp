@@ -1,0 +1,23 @@
+version: '2'
+services:
+  hexpm:
+    build: .
+    command: mix dev
+    ports:
+      - "4000:4000"
+    links:
+      - postgres
+
+  postgres:
+    image: postgres:9.5
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hexpm_dev
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+    command: postgres
+
+volumes:
+  pgdata:
+    driver: local
