@@ -90,11 +90,8 @@ tasks:
 
   build:
     description: Build docker image for service app
-    do: sequence
-    actions:
-      - do: get_private_deps
-      - do: global.docker.create_image
-        service_name: <%=service_image_name%>
+    do: global.docker.create_image
+    service_name: <%=service_image_name%>
 
   build_lb:
     description: Build docker image for service load-balancer
@@ -122,46 +119,6 @@ tasks:
     do: global.docker.pull_image
     service_name: <%=load_balancer_image_name%>
 
-  test:
-    do: sequence
-    finally_task: kill_containers
-    env:
-      - SERVICE_NAME=<%=base_service_name%>
-      - SERVICE_TAGS=black-dev
-      - DB_USERNAME_VAULT_KEY=<%=environment%>/db_username
-      - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
-      - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
-      - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
-      - IMAGE=<%=registry%>/findmypast/<%=service_image_name%>:<%=version%>
-    actions:
-      - do: kill_containers
-      - do: global.domesday.get_password
-        service_tag: black-dev
-        vault_username: <%=tc_username%>
-        vault_password: <%=tc_password%>
-        service_name: <%=base_service_name%>
-        options:
-          register: app_password
-      - do: global.docker.compose_down
-        compose_filename: docker-compose/test.yml
-        service_name: <%=base_service_name%>_test
-      - do: global.docker.compose_up_detached
-        compose_filename: docker-compose/test.yml
-        service_name: <%=base_service_name%>
-        service_args: postgres
-      - do: global.docker.compose_run
-        compose_filename: docker-compose/test.yml
-        service_name: <%=base_service_name%>_test
-        env:
-          - SERVICE_NAME=<%=base_service_name%>
-          - SERVICE_TAGS=black-dev
-          - VAULT_PASS=<%=app_password%>
-          - DB_USERNAME_VAULT_KEY=<%=environment%>/db_username
-          - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
-          - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
-          - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
-          - IMAGE=<%=registry%>/findmypast/<%=service_image_name%>:<%=version%>
-
   publish_dashboard:
     do: global.dasher.publish_dashboard
     config_filepath: config/dasher.yml
@@ -173,17 +130,6 @@ tasks:
     config_filepath: config/alerts.yml
     service_name: <%=base_service_name%>
 
-  deploy_integration:
-    do: global.deploy.deploy_blue_green
-    service_key_path: subdomains/integration
-    environment: integration
-    blue_tag: blue-integration
-    green_tag: green-integration
-    deploy_hosts: <%=integration_hosts%>
-    service_name: <%=service_image_name%>
-    compose_extra_args: -f <%=service_folder%>/docker-compose/production-<%=colour%>.yml
-    smoke_port: 3334
-
   deploy_production:
     do: global.deploy.deploy_blue_green
     service_key_path: root-tag
@@ -193,16 +139,6 @@ tasks:
     deploy_hosts: <%=production_hosts%>
     service_name: <%=service_image_name%>
     compose_extra_args: -f <%=service_folder%>/docker-compose/production-<%=colour%>.yml
-    smoke_port: 3334
-
-  deploy_load_balancer_integration:
-    description: Deploy the service load balancer for integration server(s)
-    do: global.deploy.deploy_load_balancer
-    deploy_hosts: <%=integration_hosts%>
-    environment: integration
-    consul_key_path: subdomains/integration
-    load_balancer_name: <%=load_balancer_image_name%>
-    lb_docker_environment: *LB_DOCKER_ENV
 
   deploy_load_balancer_production:
     description: Deploy the service load balancer for production server(s)

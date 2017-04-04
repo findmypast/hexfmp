@@ -1,0 +1,6 @@
+hexfmp-app:
+  description: FMP hex repo
+  root-tag: blue-production
+  subdomains:
+    integration: blue-integration
+    production: blue-production

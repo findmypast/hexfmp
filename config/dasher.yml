@@ -1,0 +1,87 @@
+data_sources:
+
+  disk_space_usage_fh1-hexfmp01:
+    key: asPercent(summarize(long.icinga2.fh1-hexfmp01_dun_fh.services.root_disc_linux.nrpe.perfdata._.value, "10min", "avg"), 25000000000)
+    functions:
+
+  cpu_usage_fh1-hexfmp01:
+    key: scale(summarize(keepLastValue(long.icinga2.fh1-hexfmp01_dun_fh.services.cpu_linux.nrpe.perfdata.load1.value), "2min", "avg"), 100)
+    functions:
+
+  memory_usage_fh1-hexfmp01:
+    key: asPercent(summarize(long.icinga2.fh1-hexfmp01_dun_fh.services.memory_linux.nrpe.perfdata.used.value, "5min", "avg"), 2087268352)
+    functions:
+
+  response_time:
+    key: averageSeries(long.hexfmp.production.*.*.phoenix.api_*.*.resp_time.mean)
+    functions:
+      - scale(1.0)
+      - summarize("10min", "avg")
+  error_rate_500:
+    key: averageSeries(long.hexfmp.production.*.*.phoenix.errors.500.count)
+    functions:
+      - summarize("10min", "sum")
+  threshold_1000:
+    key: threshold(1000)
+    functions:
+
+dashboards:
+  ops:
+    title: hexfmp ops
+    widgets:
+    
+      disk_space_usage_fh1-hexfmp01:
+        title: fh1-hexfmp01 disk
+        type: GoogleGauge
+        width: 1
+        height: 1
+        from_duration: -10min
+        properties: data-yellow_from="80" data-yellow_to="90" data-red_from="90" data-red_to="100"
+        measures:
+          disk_space_usage:
+            source: disk_space_usage_fh1-hexfmp01
+
+      cpu_usage_fh1-hexfmp01:
+        title: fh1-hexfmp01 cpu
+        type: GoogleGauge
+        width: 1
+        height: 1
+        from_duration: -10min
+        properties: data-yellow_from="80" data-yellow_to="90" data-red_from="90" data-red_to="100"
+        measures:
+          cpu_usage:
+            source: cpu_usage_fh1-hexfmp01
+
+      memory_usage_fh1-hexfmp01:
+        title: fh1-hexfmp01 memory
+        type: GoogleGauge
+        width: 1
+        height: 1
+        from_duration: -10min
+        properties: data-yellow_from="80" data-yellow_to="90" data-red_from="90" data-red_to="100"
+        measures:
+          memory_usage:
+            source: memory_usage_fh1-hexfmp01
+
+    
+  performance:
+    title: hexfmp Performance
+    widgets:
+      response_time:
+        title: hexfmp Service Response Time (ms)
+        type: Rickshawgraph
+        width: 4
+        height: 1
+        properties: data-renderer="line" data-unstack="true" data-min="-50" data-max="2200" data-background-color="#E0F2F7" data-title-color="#151515" data-tick-color="#151515"
+        measures:
+          response_time:
+            source: response_time
+      errors:
+        title: hexfmp Service Errors (per 10min)
+        type: Rickshawgraph
+        width: 4
+        height: 1
+        properties: data-renderer="line" data-unstack="true" data-min="-1" data-background-color="#E0F2F7" data-title-color="#151515" data-tick-color="#151515"
+        measures:
+          error_rate:
+            source: error_rate_500

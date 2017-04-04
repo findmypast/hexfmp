@@ -1,0 +1,12 @@
+environments:
+  production:
+    host_address: production.hexfmp.service.consul
+    slack_channel: hexfmp
+    graphite:
+      response_elapsed_time:
+        display_name: Time in ms for API response
+        graphite_target: averageSeries(long.hexfmp.production.*.*.phoenix.api_*.*.resp_time.mean)
+        reverse: false
+        critical: 10000
+        warning: 5000
+        timespan: 120
