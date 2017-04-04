@@ -1,0 +1,230 @@
+version: '2'
+vars:
+  colour: <%=service_tag.split('-')[0]%>
+  registry: docker-registry.dun.fh
+  base_service_name: hexfmp
+  service_folder: .
+  service_tag:
+  service_node:
+  create_image_extra_args:
+  app_password:
+  mix_env:
+  environment: dev
+  consul_host: consul.dun.fh
+  consul_port: 8500
+  load_balancer_image_name: <%=base_service_name%>-lb
+  service_image_name: <%=base_service_name%>-app
+  integration_hosts:
+  production_hosts:
+        - fh1-hexfmp01
+
+  docker_environment: &DOCKER_ENV
+    - COMPOSE_PROJECT_NAME=<%=base_service_name%><%=service_tag%>
+    - DOCKER_TLS_VERIFY=1
+    - DOCKER_HOST=tcp://<%=service_node%>.dun.fh:2376
+    - &IMAGE IMAGE=<%=registry%>/findmypast/<%=service_image_name%>:<%=version%>
+    - MIX_ENV=<%=mix_env%>
+    - VAULT_PASS=<%=app_password%>
+    - SERVICE_NAME=<%=service_image_name%>
+    - SERVICE_TAGS=<%=service_tag%>
+    - SERVICE_NODE=<%=service_node%>
+    - ENVIRONMENT=<%=environment%>
+    - DB_USERNAME_VAULT_KEY=<%=environment%>/db_username
+    - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
+    - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
+    - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
+
+  lb_docker_environment: &LB_DOCKER_ENV
+    - DOCKER_TLS_VERIFY=1
+    - DOCKER_HOST=tcp://<%=service_node%>.dun.fh:2376
+    - &IMAGE_LB IMAGE_LB=<%=registry%>/findmypast/<%=load_balancer_image_name%>:<%=version%>
+    - SERVICE_NAME=<%=base_service_name%>
+    - SERVICE_TAGS=<%=service_tag%>
+    - SERVICE_NODE=<%=service_node%>
+    - CONSUL_TAG_PATH=<%=consul_tag_path%>
+    - COMPOSE_PROJECT_NAME=<%=base_service_name%>
+    - ENVIRONMENT=<%=environment%>
+    - GREEN_TAG=<%=green_tag%>
+    - BLUE_TAG=<%=blue_tag%>
+
+include:
+  - from: git+ssh://git@github.com:findmypast/usher_shared_tasks.git
+    name: shared_tasks as global
+    import:
+      - docker
+      - deploy_service_discovery as deploy
+      - dasher
+      - consul
+      - domesday
+
+tasks:
+  dev:
+    do: sequence
+    finally_task: dev_cleanup
+    actions:
+      - do: global.docker.kill_containers
+        target_env: dev
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/dev.yml
+        service_name: <%=base_service_name%>
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/dev.yml
+        service_name: postgres
+      - do: global.docker.compose_up_detached
+        compose_filename: docker-compose/dev.yml
+        service_name: <%=base_service_name%>
+        service_args: postgres
+      - do: global.docker.compose_run
+        compose_filename: docker-compose/dev.yml
+        service_name: <%=base_service_name%>
+        service_args: mix ecto.setup
+      - do: global.docker.compose_up_build
+        compose_filename: docker-compose/dev.yml
+        service_name: <%=base_service_name%>
+
+  dev_cleanup:
+    do: sequence
+    actions:
+      - do: global.docker.kill_containers
+        target_env: dev
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/dev.yml
+        service_name: <%=base_service_name%>
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/dev.yml
+        service_name: postgres
+
+  dev_unit:
+    do: global.docker.compose_run
+    compose_filename: docker-compose/dev.yml
+    service_name: test_unit
+
+  build:
+    description: Build docker image for service app
+    do: sequence
+    actions:
+      - do: get_private_deps
+      - do: global.docker.create_image
+        service_name: <%=service_image_name%>
+
+  build_lb:
+    description: Build docker image for service load-balancer
+    do: global.docker.create_lb_image
+    service_name: <%=load_balancer_image_name%>
+    service_folder: ./load-balancer
+
+  push:
+    description: Push app image to the local docker repository
+    do: global.docker.push_image
+    service_name: <%=service_image_name%>
+
+  push_lb:
+    description: Push load-balancer image to the local docker repository
+    do: global.docker.push_image
+    service_name: <%=load_balancer_image_name%>
+
+  pull:
+    description: Pull app image from the local docker repository
+    do: global.docker.pull_image
+    service_name: <%=service_image_name%>
+
+  pull_lb:
+    description: Pull load-balancer image from the local docker repository
+    do: global.docker.pull_image
+    service_name: <%=load_balancer_image_name%>
+
+  test:
+    do: sequence
+    finally_task: kill_containers
+    env:
+      - SERVICE_NAME=<%=base_service_name%>
+      - SERVICE_TAGS=black-dev
+      - DB_USERNAME_VAULT_KEY=<%=environment%>/db_username
+      - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
+      - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
+      - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
+      - IMAGE=<%=registry%>/findmypast/<%=service_image_name%>:<%=version%>
+    actions:
+      - do: kill_containers
+      - do: global.domesday.get_password
+        service_tag: black-dev
+        vault_username: <%=tc_username%>
+        vault_password: <%=tc_password%>
+        service_name: <%=base_service_name%>
+        options:
+          register: app_password
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/test.yml
+        service_name: <%=base_service_name%>_test
+      - do: global.docker.compose_up_detached
+        compose_filename: docker-compose/test.yml
+        service_name: <%=base_service_name%>
+        service_args: postgres
+      - do: global.docker.compose_run
+        compose_filename: docker-compose/test.yml
+        service_name: <%=base_service_name%>_test
+        env:
+          - SERVICE_NAME=<%=base_service_name%>
+          - SERVICE_TAGS=black-dev
+          - VAULT_PASS=<%=app_password%>
+          - DB_USERNAME_VAULT_KEY=<%=environment%>/db_username
+          - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
+          - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
+          - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
+          - IMAGE=<%=registry%>/findmypast/<%=service_image_name%>:<%=version%>
+
+  publish_dashboard:
+    do: global.dasher.publish_dashboard
+    config_filepath: config/dasher.yml
+    service_name: <%=base_service_name%>
+
+  publish_icinga_alerts:
+    do: global.consul.create_key_value_pairs
+    root: proxied-services/<%=service_name%>/alerts
+    config_filepath: config/alerts.yml
+    service_name: <%=base_service_name%>
+
+  deploy_integration:
+    do: global.deploy.deploy_blue_green
+    service_key_path: subdomains/integration
+    environment: integration
+    blue_tag: blue-integration
+    green_tag: green-integration
+    deploy_hosts: <%=integration_hosts%>
+    service_name: <%=service_image_name%>
+    compose_extra_args: -f <%=service_folder%>/docker-compose/production-<%=colour%>.yml
+    smoke_port: 3334
+
+  deploy_production:
+    do: global.deploy.deploy_blue_green
+    service_key_path: root-tag
+    environment: production
+    blue_tag: blue-production
+    green_tag: green-production
+    deploy_hosts: <%=production_hosts%>
+    service_name: <%=service_image_name%>
+    compose_extra_args: -f <%=service_folder%>/docker-compose/production-<%=colour%>.yml
+    smoke_port: 3334
+
+  deploy_load_balancer_integration:
+    description: Deploy the service load balancer for integration server(s)
+    do: global.deploy.deploy_load_balancer
+    deploy_hosts: <%=integration_hosts%>
+    environment: integration
+    consul_key_path: subdomains/integration
+    load_balancer_name: <%=load_balancer_image_name%>
+    lb_docker_environment: *LB_DOCKER_ENV
+
+  deploy_load_balancer_production:
+    description: Deploy the service load balancer for production server(s)
+    do: global.deploy.deploy_load_balancer
+    deploy_hosts: <%=production_hosts%>
+    environment: production
+    consul_key_path: root-tag
+    load_balancer_name: <%=load_balancer_image_name%>
+    lb_docker_environment: *LB_DOCKER_ENV
+
+  kill_containers:
+    description: Ensure all active service containers are killed
+    do: global.docker.kill_containers
+    target_env: test

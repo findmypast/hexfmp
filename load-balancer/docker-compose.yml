@@ -1,0 +1,28 @@
+version: '2'
+services:
+  proxy:
+    image: $IMAGE_LB
+    ports:
+      - "3333:80"
+    restart: always
+    hostname: $SERVICE_NODE
+    environment:
+      - CONSUL_SERVICE_NAME=hexfmp-app
+      - CONSUL_TAG_PATH=$CONSUL_TAG_PATH
+      - CONSUL_HTTP_ADDR=${SERVICE_NODE}.dun.fh:8500
+      - SERVICE_80_NAME=$SERVICE_NAME
+      - SERVICE_TAGS=$SERVICE_TAGS
+      - SERVICE_NODE=$SERVICE_NODE
+      - ENVIRONMENT=$ENVIRONMENT
+      - SERVICE_CHECK_HTTP=/lb/_health
+      - SERVICE_CHECK_INTERVAL=60s
+      - GREEN_TAG=$GREEN_TAG
+      - BLUE_TAG=$BLUE_TAG
+    mem_limit: 256m
+    cpu_quota: 50000
+    networks:
+      - this_host_services
+
+networks:
+  this_host_services:
+    external: true

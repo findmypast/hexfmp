@@ -1,12 +1,14 @@
 version: '2'
 services:
-  hexpm:
-    build: .
+  hexfmp:
+    build: ..
     command: mix dev
     ports:
       - "4000:4000"
     links:
       - postgres
+    networks:
+      - this_host_services
 
   postgres:
     image: postgres:9.5
@@ -17,6 +19,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata
     command: postgres
+    networks:
+      - this_host_services
+
+networks:
+  this_host_services:
+    external: true
 
 volumes:
   pgdata:
