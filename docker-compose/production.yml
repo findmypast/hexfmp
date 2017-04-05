@@ -3,17 +3,25 @@ services:
   hexfmp:
     image: $IMAGE
     ports:
+<<<<<<< cae21b03dca3bc04e7d13bb1c8b76fd4b5a1546c
       - "4000"
     command: mix prod
     logging:
       driver: "gelf"
       options:
         gelf-address: "udp://graylog.dun.fh:1516"
+=======
+      - "4000:4000"
+    command: mix phx.server
+    logging:
+      driver: "json-file"
+>>>>>>> look out production, here comes hexfmp
     environment:
       - MIX_ENV=prod
       - SERVICE_NAME=$SERVICE_NAME
       - SERVICE_TAGS=$SERVICE_TAGS
       - SERVICE_NODE=$SERVICE_NODE
+<<<<<<< cae21b03dca3bc04e7d13bb1c8b76fd4b5a1546c
       - SERVICE_CHECK_HTTP=/
       - SERVICE_CHECK_INTERVAL=60s
       - SECRET_KEY_BASE
@@ -28,6 +36,16 @@ services:
       - SUPPORT_EMAIL=$SUPPORT_EMAIL
     volumes:
       - /var/lib/docker/volumes/hexfmp/tmp:/usr/src/app/tmp
+=======
+      - SERVICE_CHECK_HTTP=/api/_health
+      - SERVICE_CHECK_INTERVAL=60s
+      - SECRET_KEY_BASE
+      - VAULT_PASS=$VAULT_PASS
+      - DB_USERNAME_VAULT_KEY=$DB_USERNAME_VAULT_KEY
+      - DB_PASSWORD_VAULT_KEY=$DB_PASSWORD_VAULT_KEY
+      - DB_HOSTNAME_VAULT_KEY=$DB_HOSTNAME_VAULT_KEY
+      - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
+>>>>>>> look out production, here comes hexfmp
     restart: always
     networks:
       - this_host_services

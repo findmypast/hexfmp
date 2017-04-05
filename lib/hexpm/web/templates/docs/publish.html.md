@@ -77,32 +77,20 @@ Only Hex packages will be included as dependencies of the package, for example G
 
 ```elixir
 defmodule Postgrex.Mixfile do
-<<<<<<< 37be780c791822251e4f3f9155817bc4b78ca166
   use Mix.Project
-=======
-  use Mix.Proj
->>>>>>> Use markdown for the publish docs instead of HTML (#498)
 
   def project do
     [
       app: :postgrex,
       version: "0.1.0",
-<<<<<<< 37be780c791822251e4f3f9155817bc4b78ca166
       elixir: "~> 1.0",
-=======
-      elixir: "0.13.0",
->>>>>>> Use markdown for the publish docs instead of HTML (#498)
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       description: description(),
       package: package(),
       deps: deps(),
       name: "Postgrex",
-<<<<<<< 37be780c791822251e4f3f9155817bc4b78ca166
       source_url: "https://github.com/elixir-ecto/postgrex"
-=======
-      source_url: "https://github.com/ericmj/postgrex"
->>>>>>> Use markdown for the publish docs instead of HTML (#498)
     ]
   end
 
@@ -112,13 +100,8 @@ defmodule Postgrex.Mixfile do
 
   defp deps do
     [
-<<<<<<< 37be780c791822251e4f3f9155817bc4b78ca166
       {:decimal, "~> 1.0"},
-      {:ex_doc, "~> 0.14", only: :dev},
-=======
-      {:decimal, "~> 0.2.0"},
-      {:ex_doc, github: "elixir-lang/ex_doc"}
->>>>>>> Use markdown for the publish docs instead of HTML (#498)
+      {:ex_doc, "~> 0.14", only: :dev}
     ]
   end
 
@@ -135,11 +118,7 @@ defmodule Postgrex.Mixfile do
       files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
       maintainers: ["Eric Meadows-Jönsson", "José Valim"],
       licenses: ["Apache 2.0"],
-<<<<<<< 37be780c791822251e4f3f9155817bc4b78ca166
       links: %{"GitHub" => "https://github.com/elixir-ecto/postgrex"}
-=======
-      links: %{"GitHub" => "https://github.com/ericmj/postgrex"}
->>>>>>> Use markdown for the publish docs instead of HTML (#498)
     ]
   end
 end
