@@ -58,6 +58,7 @@ defmodule Hexpm.Mixfile do
      {:plug_attack, "~> 0.3"},
      {:gelf_logger, "0.7.1"},
      {:hackney, "~> 1.7"},
+     {:vaultex, "0.2.10"},
      {:retry, "0.6.0"},
      {:ex_machina, "~> 2.0", only: [:dev, :test]},
      {:phoenix_live_reload, "~> 1.0", only: :dev},

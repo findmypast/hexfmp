@@ -10,7 +10,7 @@ defmodule Hexpm.Application do
     Hexpm.BlockAddress.start
 
     children = [
-      supervisor(Hexpm.Repo, []),
+      supervisor(Hexpm.Repo, [], function: :init),
       supervisor(Task.Supervisor, [[name: Hexpm.Tasks]]),
       worker(PlugAttack.Storage.Ets, [Hexpm.PlugAttack, [clean_period: 60_000]]),
       worker(Hexpm.Throttle, [[name: Hexpm.SESThrottle, rate: ses_rate, unit: 1000]]),
@@ -21,7 +21,13 @@ defmodule Hexpm.Application do
     shutdown_on_eof()
 
     opts = [strategy: :one_for_one, name: Hexpm.Supervisor]
-    Supervisor.start_link(children, opts)
+    launch(children, opts)
+  end
+
+  defp launch(children, opts) do
+    with {:ok, pid} <- Supervisor.start_link(children, opts),
+         :ok <- Mix.Tasks.Ecto.Migrate.run(["--repo", Hexpm.Repo]),
+      do: {:ok, pid}
   end
 
   def config_change(changed, _new, removed) do

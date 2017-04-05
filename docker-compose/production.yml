@@ -1,0 +1,29 @@
+version: '2'
+services:
+  hexfmp:
+    image: $IMAGE
+    ports:
+      - "4000:4000"
+    command: mix phx.server
+    logging:
+      driver: "json-file"
+    environment:
+      - MIX_ENV=prod
+      - SERVICE_NAME=$SERVICE_NAME
+      - SERVICE_TAGS=$SERVICE_TAGS
+      - SERVICE_NODE=$SERVICE_NODE
+      - SERVICE_CHECK_HTTP=/api/_health
+      - SERVICE_CHECK_INTERVAL=60s
+      - SECRET_KEY_BASE
+      - VAULT_PASS=$VAULT_PASS
+      - DB_USERNAME_VAULT_KEY=$DB_USERNAME_VAULT_KEY
+      - DB_PASSWORD_VAULT_KEY=$DB_PASSWORD_VAULT_KEY
+      - DB_HOSTNAME_VAULT_KEY=$DB_HOSTNAME_VAULT_KEY
+      - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
+    restart: always
+    networks:
+      - this_host_services
+
+networks:
+  this_host_services:
+    external: true

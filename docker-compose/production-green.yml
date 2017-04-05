@@ -1,0 +1,8 @@
+version: '2'
+networks:
+  hexfmp:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.30.2.0/24
