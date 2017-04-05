@@ -9,7 +9,6 @@ COPY . /usr/src/app
 WORKDIR /usr/src/app
 
 # Set environment variables
-ENV MIX_ENV dev
 ENV PORT 4000
 EXPOSE 4000
 # Install elixir dependencies

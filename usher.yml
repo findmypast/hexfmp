@@ -14,6 +14,7 @@ vars:
   consul_port: 8500
   load_balancer_image_name: <%=base_service_name%>-lb
   service_image_name: <%=base_service_name%>-app
+  test_service_name: <%=base_service_name%>_test
   integration_hosts:
   production_hosts:
         - fh1-hexfmp01
@@ -88,6 +89,27 @@ tasks:
     compose_filename: docker-compose/dev.yml
     service_name: test_unit
 
+  test:
+    do: sequence
+    finally_task: test_cleanup
+    actions:
+      - do: test_cleanup
+      - do: global.docker.compose_up_detached
+        compose_filename: docker-compose/test.yml
+        service_name: <%=test_service_name%>
+        service_args: postgres
+      - do: global.docker.compose_up_build
+        compose_filename: docker-compose/test.yml
+        service_name: <%=test_service_name%>
+
+  test_cleanup:
+    do: sequence
+    actions:
+      - do: global.docker.kill_containers
+        target_env: test
+      - do: global.docker.compose_down
+        compose_filename: docker-compose/test.yml
+
   build:
     description: Build docker image for service app
     do: global.docker.create_image
@@ -148,8 +170,3 @@ tasks:
     consul_key_path: root-tag
     load_balancer_name: <%=load_balancer_image_name%>
     lb_docker_environment: *LB_DOCKER_ENV
-
-  kill_containers:
-    description: Ensure all active service containers are killed
-    do: global.docker.kill_containers
-    target_env: test

@@ -1,12 +1,10 @@
 version: '2'
 services:
-  hexfmp:
+  hexfmp_test:
     build: ..
-    command: mix dev
-    ports:
-      - "4000:4000"
+    command: mix test
     environment:
-      - MIX_ENV=dev
+      - MIX_ENV=test
     links:
       - postgres
     networks:
@@ -16,7 +14,7 @@ services:
     image: postgres:9.5
     environment:
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=hexpm_dev
+      - POSTGRES_DB=hexpm_test
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - pgdata:/var/lib/postgresql/data/pgdata

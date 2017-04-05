@@ -10,7 +10,7 @@ config :hexpm,
   public_key:  File.read!("test/fixtures/public.pem")
 
 config :hexpm, Hexpm.Web.Endpoint,
-  http: [port: 4001],
+  http: [port: 4000],
   server: false
 
 config :hexpm, Hexpm.Emails.Mailer,
@@ -21,7 +21,7 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_test",
-  hostname: "localhost",
+  hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10,
   ownership_timeout: 61_000
