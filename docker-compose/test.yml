@@ -3,6 +3,8 @@ services:
   hexfmp_test:
     build: ..
     command: mix test
+    logging:
+      driver: "json-file"
     environment:
       - MIX_ENV=test
     links:
@@ -16,8 +18,6 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=hexpm_test
       - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - pgdata:/var/lib/postgresql/data/pgdata
     command: postgres
     networks:
       - this_host_services
@@ -25,7 +25,3 @@ services:
 networks:
   this_host_services:
     external: true
-
-volumes:
-  pgdata:
-    driver: local
