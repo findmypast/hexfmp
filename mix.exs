@@ -56,6 +56,7 @@ defmodule Hexpm.Mixfile do
      {:postgrex, ">= 0.0.0"},
      {:sweet_xml, "~> 0.5"},
      {:plug_attack, "~> 0.3"},
+     {:gelf_logger, "0.7.1"},
      {:hackney, "~> 1.7"},
      {:retry, "0.6.0"},
      {:ex_machina, "~> 2.0", only: [:dev, :test]},

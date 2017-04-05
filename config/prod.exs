@@ -25,15 +25,14 @@ config :rollbax,
   environment: to_string(Mix.env),
   enabled: !!System.get_env("ROLLBAR_ACCESS_TOKEN")
 
+config :logger, level: :warn
 config :logger,
-  backends: [Rollbax.Logger, :console]
+  backends: [:console, {Logger.Backends.Gelf, :gelf_logger}]
 
-config :logger, Rollbax.Logger,
-  level: :error
-
-# Don't include date time on heroku
-config :logger, :console,
-  format: "[$level] $message\n"
-
-config :logger,
-  level: :warn
+config :logger, :gelf_logger,
+  host: "graylog.dun.fh",
+  port: 1516,
+  level: :warn,
+  application: "Arq",
+  compression: :gzip, # Defaults to :gzip, also accepts :zlib or :raw
+  metadata: [:request_id, :module, :file, :facility]
