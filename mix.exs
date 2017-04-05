@@ -68,7 +68,7 @@ defmodule Hexpm.Mixfile do
     ["compile.gpb": &compile_gpb/1,
      "ecto.setup": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
-     "test": ["ecto.migrate", "test"],
+     "test": ["ecto.reset", "ecto.migrate", "test"],
      "dev": ["wait_for_db", "phx.server"]
     ]
   end
