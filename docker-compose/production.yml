@@ -6,7 +6,9 @@ services:
       - "4000:4000"
     command: mix phx.server
     logging:
-      driver: "json-file"
+      driver: "gelf"
+      options:
+        gelf-address: "udp://graylog.dun.fh:1516"
     environment:
       - MIX_ENV=prod
       - SERVICE_NAME=$SERVICE_NAME
