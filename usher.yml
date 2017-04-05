@@ -34,6 +34,7 @@ vars:
     - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
     - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
     - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
+  #  - DATABASE_URL=ecto://USER:PASSWORD@localhost/DATABASE
 
   lb_docker_environment: &LB_DOCKER_ENV
     - DOCKER_TLS_VERIFY=1
@@ -98,7 +99,10 @@ tasks:
         compose_filename: docker-compose/test.yml
         service_name: <%=test_service_name%>
         service_args: postgres
-      - do: global.docker.compose_up_build
+      - do: global.docker.compose_build
+        compose_filename: docker-compose/test.yml
+        service_name: <%=test_service_name%>
+      - do: global.docker.compose_run
         compose_filename: docker-compose/test.yml
         service_name: <%=test_service_name%>
 
