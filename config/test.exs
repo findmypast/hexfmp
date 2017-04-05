@@ -26,5 +26,4 @@ config :hexpm, Hexpm.Repo,
   pool_size: 10,
   ownership_timeout: 61_000
 
-config :logger,
-  level: :error
+config :logger, level: :info
