@@ -6,11 +6,11 @@ services:
     environment:
       - MIX_ENV=test
     links:
-      - postgres
+      - hexfmp_postgres_test
     networks:
       - this_host_services
 
-  postgres:
+  hexfmp_postgres_test:
     image: postgres:9.5
     environment:
       - POSTGRES_PASSWORD=postgres

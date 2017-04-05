@@ -21,7 +21,7 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_test",
-  hostname: "postgres",
+  hostname: "hexfmp_postgres_test",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10,
   ownership_timeout: 61_000

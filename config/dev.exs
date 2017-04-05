@@ -35,7 +35,7 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_dev",
-  hostname: "postgres",
+  hostname: "hexfmp_postgres_dev",
   pool_size: 5
 
 config :hexpm, Hexpm.Emails.Mailer,

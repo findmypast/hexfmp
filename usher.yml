@@ -68,7 +68,7 @@ tasks:
       - do: global.docker.compose_up_detached
         compose_filename: docker-compose/dev.yml
         service_name: <%=base_service_name%>
-        service_args: postgres
+        service_args: hexfmp_postgres_dev
       - do: global.docker.compose_run
         compose_filename: docker-compose/dev.yml
         service_name: <%=base_service_name%>
