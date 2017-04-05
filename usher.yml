@@ -95,14 +95,7 @@ tasks:
     finally_task: test_cleanup
     actions:
       - do: test_cleanup
-      - do: global.docker.compose_up_detached
-        compose_filename: docker-compose/test.yml
-        service_name: <%=test_service_name%>
-        service_args: postgres
-      - do: global.docker.compose_build
-        compose_filename: docker-compose/test.yml
-        service_name: <%=test_service_name%>
-      - do: global.docker.compose_run
+      - do: global.docker.compose_up_build
         compose_filename: docker-compose/test.yml
         service_name: <%=test_service_name%>
 
