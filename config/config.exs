@@ -99,4 +99,8 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :vaultex,
+  host: "production.vault.service.consul",
+  port: 8200
+  
 import_config "#{Mix.env}.exs"

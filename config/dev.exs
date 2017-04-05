@@ -38,5 +38,9 @@ config :hexpm, Hexpm.Repo,
   hostname: "hexfmp_postgres_dev",
   pool_size: 5
 
+config :ex_statsd,
+       host: "graphite.dun.fh",
+       namespace: "hexfmp"
+
 config :hexpm, Hexpm.Emails.Mailer,
   adapter: Bamboo.LocalAdapter

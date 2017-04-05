@@ -18,7 +18,7 @@ defmodule Hexpm.Mixfile do
 
   def application do
     [mod: {Hexpm.Application, []},
-     extra_applications: [:logger]]
+     extra_applications: [:logger, :ex_statsd]]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
@@ -59,10 +59,11 @@ defmodule Hexpm.Mixfile do
      {:gelf_logger, "0.7.1"},
      {:hackney, "~> 1.7"},
      {:vaultex, "0.2.10"},
+     {:ex_statsd, "0.5.2"},
      {:retry, "0.6.0"},
      {:ex_machina, "~> 2.0", only: [:dev, :test]},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:rollbax, "~> 0.5", only: :prod}]
+     {:phoenix_live_reload, "~> 1.0", only: :dev}
+    ]
   end
 
   defp aliases do

@@ -19,11 +19,6 @@ config :hexpm, Hexpm.Repo,
 config :comeonin,
   bcrypt_log_rounds: 12
 
-config :rollbax,
-  access_token: System.get_env("ROLLBAR_ACCESS_TOKEN"),
-  environment: to_string(Mix.env),
-  enabled: !!System.get_env("ROLLBAR_ACCESS_TOKEN")
-
 config :logger, level: :warn
 config :logger,
   backends: [:console, {Logger.Backends.Gelf, :gelf_logger}]
@@ -32,6 +27,10 @@ config :logger, :gelf_logger,
   host: "graylog.dun.fh",
   port: 1516,
   level: :warn,
-  application: "Arq",
+  application: "Hexfmp",
   compression: :gzip, # Defaults to :gzip, also accepts :zlib or :raw
   metadata: [:request_id, :module, :file, :facility]
+
+config :ex_statsd,
+       host: "graphite.dun.fh",
+       namespace: "hexfmp"
