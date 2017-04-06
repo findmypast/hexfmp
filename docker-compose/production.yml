@@ -14,7 +14,7 @@ services:
       - SERVICE_NAME=$SERVICE_NAME
       - SERVICE_TAGS=$SERVICE_TAGS
       - SERVICE_NODE=$SERVICE_NODE
-      - HEX_URL=http://production.hexfmp.service.consul:3333
+      - HEX_URL=hex.pm
       - SERVICE_CHECK_HTTP=/api/_health
       - SERVICE_CHECK_INTERVAL=60s
       - SECRET_KEY_BASE
