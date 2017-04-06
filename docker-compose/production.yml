@@ -4,7 +4,7 @@ services:
     image: $IMAGE
     ports:
       - "4000:4000"
-    command: mix compile && mix phx.digest && mix phx.server
+    command: mix prod
     logging:
       driver: "gelf"
       options:
