@@ -12,11 +12,18 @@ defmodule Hexpm.Repo do
      {:database, System.get_env("DB_DATABASE_VAULT_KEY")}]
   end
 
-  def init(opts \\ []) do
-    database_parameters()
-    |> Enum.scan(opts, &raid_vault_and_add_to_opts/2)
-    |> start_link
+  if Mix.env == :prod do
+    def init(opts \\ []) do
+      database_parameters()
+      |> Enum.scan(opts, &raid_vault_and_add_to_opts/2)
+      |> start_link
+    end
+  else
+    def init(opts \\ []) do
+      start_link
+    end
   end
+
 
   defp raid_vault_and_add_to_opts({key, vault_location}, _opts) do
     case Raider.raid_vault(vault_location) do
@@ -24,7 +31,7 @@ defmodule Hexpm.Repo do
       {:error, key, _tuple} -> raise "Cannot raid vault for #{key}"
     end
   end
-  
+
   @advisory_locks %{
     registry: 1
   }
