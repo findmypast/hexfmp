@@ -3,7 +3,7 @@ services:
   hexfmp:
     image: $IMAGE
     ports:
-      - "4000:4000"
+      - "4000"
     command: mix prod
     logging:
       driver: "gelf"
