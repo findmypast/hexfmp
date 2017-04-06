@@ -1,1 +1,1 @@
-http://{{ domain }}/api/_health 200
+http://{{ domain }}/ 200
