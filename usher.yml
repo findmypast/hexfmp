@@ -34,7 +34,8 @@ vars:
     - DB_PASSWORD_VAULT_KEY=<%=environment%>/db_password
     - DB_HOSTNAME_VAULT_KEY=<%=environment%>/db_hostname
     - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
-  #  - DATABASE_URL=ecto://USER:PASSWORD@localhost/DATABASE
+    - DB_ADMIN_USERNAME_VAULT_KEY=<%=environment%>/db_admin_username
+    - DB_ADMIN_PASSWORD_VAULT_KEY=<%=environment%>/db_admin_password
 
   lb_docker_environment: &LB_DOCKER_ENV
     - DOCKER_TLS_VERIFY=1
