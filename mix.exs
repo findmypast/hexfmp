@@ -71,7 +71,7 @@ defmodule Hexpm.Mixfile do
      "ecto.setup": ["ecto.drop", "ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.create", "ecto.migrate"],
      "test": ["ecto.reset", "ecto.migrate", "test"],
-     "prod": ["compile", "phx.digest", "phx.server"],
+     "prod": ["compile", "phx.server"],
      "dev": ["wait_for_db", "phx.server"]
     ]
   end
