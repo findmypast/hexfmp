@@ -19,6 +19,9 @@ WORKDIR /usr/src/app
 ENV PORT 4000
 EXPOSE 4000
 
+# Install elixir dependencies
+RUN mix do deps.get, deps.compile
+
 WORKDIR /usr/src/app/assets
 
 RUN npm install -g brunch
@@ -26,9 +29,6 @@ RUN npm install
 RUN brunch build --production
 
 WORKDIR /usr/src/app
-
-# Install elixir dependencies
-RUN mix do deps.get, deps.compile
 
 # Compile phoenix app
 RUN mix compile && \
