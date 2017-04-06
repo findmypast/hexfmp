@@ -18,19 +18,22 @@ WORKDIR /usr/src/app
 # Set environment variables
 ENV PORT 4000
 EXPOSE 4000
+
+WORKDIR /usr/src/app/assets
+
+RUN npm install -g brunch
+RUN npm install
+RUN brunch build --production
+
+WORKDIR /usr/src/app
+
 # Install elixir dependencies
 RUN mix do deps.get, deps.compile
 
 # Compile phoenix app
 RUN mix compile && \
     mix phx.digest
-
-WORKDIR /usr/src/app/assets
-
-RUN npm install
-
-WORKDIR /usr/src/app
-
+    
 ENTRYPOINT ["/tini", "--"]
 
 CMD ["mix", "phx.server"]
