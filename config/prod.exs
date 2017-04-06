@@ -5,7 +5,7 @@ config :hexpm,
   cookie_encr_salt: "TZDiyTeFQ819hsC3" # System.get_env("HEX_COOKIE_ENCRYPTION_SALT")
 
 config :hexpm, Hexpm.Web.Endpoint,
-  # http: [port: {:system, "PORT"}],
+  http: [port: 4000, ip: {0, 0, 0, 0}],
   # url: [host: System.get_env("HEX_URL"), scheme: "https", port: 443],
   # force_ssl: [hsts: true, host: nil, rewrite_on: [:x_forwarded_proto]],
   # cache_static_manifest: "priv/static/cache_manifest.json",
