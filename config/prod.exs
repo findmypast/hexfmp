@@ -9,7 +9,7 @@ config :hexpm, Hexpm.Web.Endpoint,
   # url: [host: System.get_env("HEX_URL"), scheme: "https", port: 443],
   # force_ssl: [hsts: true, host: nil, rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  secret_key_base: System.get_env("SECRET_KEY_BASE")
+  secret_key_base: "Cc2cUvbm9x/uPD01xnKmpmU93mgZuht5cTejKf/Z2x0MmfqE1ZgHJ1/hSZwd8u4L" # System.get_env("SECRET_KEY_BASE")
 
 config :hexpm, Hexpm.Repo,
   adapter: Ecto.Adapters.Postgres,
