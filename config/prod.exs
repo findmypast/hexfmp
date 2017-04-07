@@ -3,8 +3,7 @@ use Mix.Config
 config :hexpm,
   cookie_sign_salt: "lYEJ7Wc8jFwNrPke", # System.get_env("HEX_COOKIE_SIGNING_SALT"),
   cookie_encr_salt: "TZDiyTeFQ819hsC3", # System.get_env("HEX_COOKIE_ENCRYPTION_SALT")
-  secret: "796f75666f756e64746865686578", # System.get_env("HEX_SECRET")
-  skip_email_verify: true
+  secret: "796f75666f756e64746865686578" # System.get_env("HEX_SECRET")
 
 config :hexpm, Hexpm.Web.Endpoint,
   http: [port: 4000, ip: {0, 0, 0, 0}],

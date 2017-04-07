@@ -19,6 +19,7 @@ config :hexpm,
   private_key:      System.get_env("HEX_SIGNING_KEY"),
   cookie_sign_salt: "lYEJ7Wc8jFwNrPke",
   cookie_encr_salt: "TZDiyTeFQ819hsC3",
+  skip_email_verify: true,
 
   store_impl:   store,
   s3_url:       System.get_env("HEX_S3_URL") || "https://s3.amazonaws.com",
@@ -102,5 +103,5 @@ config :logger, :console,
 config :vaultex,
   host: "production.vault.service.consul",
   port: 8200
-  
+
 import_config "#{Mix.env}.exs"
