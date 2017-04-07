@@ -29,8 +29,12 @@ defmodule Hexpm.Accounts.Users do
 
     case Repo.transaction(multi) do
       {:ok, %{user: %{emails: [email]} = user}} ->
-        Emails.verification(user, email)
-        verify_email(user.username, email.email, email.verification_key)
+        if Application.get_env(:hexpm, :skip_email_verify) do
+          Emails.verification(user, email)
+          verify_email(user.username, email.email, email.verification_key)
+        else
+          Emails.verification(user, email) |> Mailer.deliver_now_throttled
+        end
         {:ok, user}
       {:error, :user, changeset, _} ->
         {:error, changeset}
