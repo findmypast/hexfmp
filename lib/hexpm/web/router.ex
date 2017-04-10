@@ -94,21 +94,19 @@ defmodule Hexpm.Web.Router do
     get "/installs/hex.ez", InstallController,    :archive
   end
 
-  if Mix.env in [:dev, :test, :hex] do
-    scope "/repo", Hexpm.Web do
-      get "/registry.ets.gz",        TestController, :registry
-      get "/registry.ets.gz.signed", TestController, :registry_signed
-      get "/names",                  TestController, :names
-      get "/versions",               TestController, :version
-      get "/packages/:package",      TestController, :package
-      get "/tarballs/:ball",         TestController, :tarball
-      get "/installs/hex-1.x.csv",   TestController, :installs_csv
-    end
+  scope "/repo", Hexpm.Web do
+    get "/registry.ets.gz",        TestController, :registry
+    get "/registry.ets.gz.signed", TestController, :registry_signed
+    get "/names",                  TestController, :names
+    get "/versions",               TestController, :version
+    get "/packages/:package",      TestController, :package
+    get "/tarballs/:ball",         TestController, :tarball
+    get "/installs/hex-1.x.csv",   TestController, :installs_csv
+  end
 
-    scope "/docs", Hexpm.Web do
-      get "/:package/:version/*page", TestController, :docs_page
-      get "/sitemap.xml",             TestController, :docs_sitemap
-    end
+  scope "/docs", Hexpm.Web do
+    get "/:package/:version/*page", TestController, :docs_page
+    get "/sitemap.xml",             TestController, :docs_sitemap
   end
 
   scope "/api", Hexpm.Web.API, as: :api do
