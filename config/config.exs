@@ -57,7 +57,7 @@ config :porcelain,
   driver: Porcelain.Driver.Basic
 
 config :hexpm, Hexpm.Web.Endpoint,
-  url: [host: "localhost", port: {:system, "PORT"}],
+  http: [port: 4000, ip: {0, 0, 0, 0}],
   root: Path.dirname(__DIR__),
   secret_key_base: "Cc2cUvbm9x/uPD01xnKmpmU93mgZuht5cTejKf/Z2x0MmfqE1ZgHJ1/hSZwd8u4L",
   render_errors: [view: Hexpm.Web.ErrorView, accepts: ~w(html json elixir erlang)]

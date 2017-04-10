@@ -35,7 +35,7 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_dev",
-  hostname: "hexfmp_postgres_dev",
+  hostname: "hexfmp_postgres_dev", #localhost
   pool_size: 5
 
 config :ex_statsd,
