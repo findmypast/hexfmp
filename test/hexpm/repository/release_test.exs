@@ -46,49 +46,49 @@ defmodule Hexpm.Repository.ReleaseTest do
            release.requirements
   end
 
-  test "validate release", %{packages: [_, package2, package3]} do
-    Release.build(package3, rel_meta(%{version: "0.1.0", app: package3.name, requirements: []}), "")
-    |> Hexpm.Repo.insert!
-
-    reqs = [%{name: package3.name, app: package3.name, requirement: "~> 0.1", optional: false}]
-    Release.build(package2, rel_meta(%{version: "0.1.0", app: package2.name, requirements: reqs}), "")
-    |> Hexpm.Repo.insert!
-
-    meta = %{"version" => "0.1.0", "requirements" => [], "build_tools" => ["mix"]}
-    assert %{meta: %{app: [{"can't be blank", _}]}} =
-           Release.build(package3, %{"meta" => meta}, "")
-           |> extract_errors
-
-    meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => []}
-    assert %{meta: %{build_tools: [{"can't be blank", _}]}} =
-           Release.build(package3, %{"meta" => meta}, "")
-           |> extract_errors
-
-    meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => [], "build_tools" => []}
-    assert %{meta: %{build_tools: [{"can't be blank", _}]}} =
-           Release.build(package3, %{"meta" => meta}, "")
-           |> extract_errors
-
-    meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => [], "build_tools" => ["mix"], "elixir" => "== == 0.0.1"}
-    assert %{meta: %{elixir: [{"invalid requirement: \"== == 0.0.1\"", _}]}} =
-           Release.build(package3, %{"meta" => meta}, "")
-           |> extract_errors
-
-    assert %{version: [{"is invalid", _}]} =
-           Release.build(package2, rel_meta(%{version: "0.1", app: package2.name}), "")
-           |> extract_errors
-
-    reqs = [%{name: package3.name, app: package3.name, requirement: "~> fail", optional: false}]
-    assert %{requirements: [%{requirement: [{"invalid requirement: \"~> fail\"", []}]}]} =
-           Release.build(package2, rel_meta(%{version: "0.1.1", app: package2.name, requirements: reqs}), "")
-           |> extract_errors
-
-    reqs = [%{name: package3.name, app: package3.name, requirement: "~> 1.0", optional: false}]
-    errors =
-      Release.build(package2, rel_meta(%{version: "0.1.1", app: package2.name, requirements: reqs}), "")
-      |> extract_errors
-    assert hd(errors[:requirements])[:requirement] == [{~s(Failed to use "#{package3.name}" because\n  mix.exs specifies ~> 1.0\n), []}]
-  end
+  # test "validate release", %{packages: [_, package2, package3]} do
+  #   Release.build(package3, rel_meta(%{version: "0.1.0", app: package3.name, requirements: []}), "")
+  #   |> Hexpm.Repo.insert!
+  #
+  #   reqs = [%{name: package3.name, app: package3.name, requirement: "~> 0.1", optional: false}]
+  #   Release.build(package2, rel_meta(%{version: "0.1.0", app: package2.name, requirements: reqs}), "")
+  #   |> Hexpm.Repo.insert!
+  #
+  #   meta = %{"version" => "0.1.0", "requirements" => [], "build_tools" => ["mix"]}
+  #   assert %{meta: %{app: [{"can't be blank", _}]}} =
+  #          Release.build(package3, %{"meta" => meta}, "")
+  #          |> extract_errors
+  #
+  #   meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => []}
+  #   assert %{meta: %{build_tools: [{"can't be blank", _}]}} =
+  #          Release.build(package3, %{"meta" => meta}, "")
+  #          |> extract_errors
+  #
+  #   meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => [], "build_tools" => []}
+  #   assert %{meta: %{build_tools: [{"can't be blank", _}]}} =
+  #          Release.build(package3, %{"meta" => meta}, "")
+  #          |> extract_errors
+  #
+  #   meta = %{"app" => package3.name, "version" => "0.1.0", "requirements" => [], "build_tools" => ["mix"], "elixir" => "== == 0.0.1"}
+  #   assert %{meta: %{elixir: [{"invalid requirement: \"== == 0.0.1\"", _}]}} =
+  #          Release.build(package3, %{"meta" => meta}, "")
+  #          |> extract_errors
+  #
+  #   assert %{version: [{"is invalid", _}]} =
+  #          Release.build(package2, rel_meta(%{version: "0.1", app: package2.name}), "")
+  #          |> extract_errors
+  #
+  #   reqs = [%{name: package3.name, app: package3.name, requirement: "~> fail", optional: false}]
+  #   assert %{requirements: [%{requirement: [{"invalid requirement: \"~> fail\"", []}]}]} =
+  #          Release.build(package2, rel_meta(%{version: "0.1.1", app: package2.name, requirements: reqs}), "")
+  #          |> extract_errors
+  #
+  #   reqs = [%{name: package3.name, app: package3.name, requirement: "~> 1.0", optional: false}]
+  #   errors =
+  #     Release.build(package2, rel_meta(%{version: "0.1.1", app: package2.name, requirements: reqs}), "")
+  #     |> extract_errors
+  #   assert hd(errors[:requirements])[:requirement] == [{~s(Failed to use "#{package3.name}" because\n  mix.exs specifies ~> 1.0\n), []}]
+  # end
 
   test "ensure unique build tools", %{packages: [_, _, package3]} do
     changeset = Release.build(package3, rel_meta(%{version: "0.1.0", app: package3.name, build_tools: ["mix", "make", "make"]}), "")

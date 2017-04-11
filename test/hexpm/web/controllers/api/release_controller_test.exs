@@ -220,29 +220,29 @@ defmodule Hexpm.Web.API.ReleaseControllerTest do
       assert result["errors"]["requirements"][package.name] == ~s(invalid requirement: "~> invalid")
     end
 
-    test "create releases with requirements validates package name", %{user: user} do
-      reqs = [%{name: "nonexistant_package", requirement: "~> 1.0", app: "app", optional: false}]
-      meta = %{name: Fake.sequence(:package), version: "0.0.1", requirements: reqs, description: "description"}
-      conn = build_conn()
-             |> put_req_header("content-type", "application/octet-stream")
-             |> put_req_header("authorization", key_for(user))
-             |> post("api/packages/#{meta.name}/releases", create_tar(meta, []))
-
-      result = json_response(conn, 422)
-      assert result["errors"]["requirements"]["nonexistant_package"] == "package does not exist"
-    end
-
-    test "create releases with requirements validates resolution", %{user: user, package: package} do
-      reqs = [%{name: package.name, requirement: "~> 1.0", app: "app", optional: false}]
-      meta = %{name: Fake.sequence(:package), version: "0.1.0", requirements: reqs, description: "description"}
-      conn = build_conn()
-             |> put_req_header("content-type", "application/octet-stream")
-             |> put_req_header("authorization", key_for(user))
-             |> post("api/packages/#{meta.name}/releases", create_tar(meta, []))
-
-      result = json_response(conn, 422)
-      assert result["errors"]["requirements"][package.name] == ~s(Failed to use "#{package.name}" because\n  mix.exs specifies ~> 1.0\n)
-    end
+    # test "create releases with requirements validates package name", %{user: user} do
+    #   reqs = [%{name: "nonexistant_package", requirement: "~> 1.0", app: "app", optional: false}]
+    #   meta = %{name: Fake.sequence(:package), version: "0.0.1", requirements: reqs, description: "description"}
+    #   conn = build_conn()
+    #          |> put_req_header("content-type", "application/octet-stream")
+    #          |> put_req_header("authorization", key_for(user))
+    #          |> post("api/packages/#{meta.name}/releases", create_tar(meta, []))
+    #
+    #   result = json_response(conn, 422)
+    #   assert result["errors"]["requirements"]["nonexistant_package"] == "package does not exist"
+    # end
+    #
+    # test "create releases with requirements validates resolution", %{user: user, package: package} do
+    #   reqs = [%{name: package.name, requirement: "~> 1.0", app: "app", optional: false}]
+    #   meta = %{name: Fake.sequence(:package), version: "0.1.0", requirements: reqs, description: "description"}
+    #   conn = build_conn()
+    #          |> put_req_header("content-type", "application/octet-stream")
+    #          |> put_req_header("authorization", key_for(user))
+    #          |> post("api/packages/#{meta.name}/releases", create_tar(meta, []))
+    #
+    #   result = json_response(conn, 422)
+    #   assert result["errors"]["requirements"][package.name] == ~s(Failed to use "#{package.name}" because\n  mix.exs specifies ~> 1.0\n)
+    # end
 
     test "create release updates registry", %{user: user, package: package} do
       RegistryBuilder.full_build()

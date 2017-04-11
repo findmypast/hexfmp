@@ -24,28 +24,28 @@ defmodule Hexpm.Web.API.UserControllerTest do
       assert List.first(user.emails).email == params.email
     end
 
-    test "create user sends mails and requires confirmation" do
-      params = %{username: Fake.sequence(:username), email: Fake.sequence(:email), password: "passpass"}
-      conn = json_post(build_conn(), "api/users", params)
-
-      assert conn.status == 201
-      user = Hexpm.Repo.get_by!(User, username: params.username) |> Hexpm.Repo.preload(:emails)
-      user_email = List.first(user.emails)
-
-      [email] = Bamboo.SentEmail.all
-      assert email.subject =~ "Hex.pm"
-      assert email.html_body =~ "email/verify?username=#{params.username}&email=#{URI.encode_www_form(user_email.email)}&key=#{user_email.verification_key}"
-
-      conn = publish_package(user)
-      assert json_response(conn, 403)["message"] == "email not verified"
-
-      conn = get(build_conn(), "email/verify?username=#{params.username}&email=#{URI.encode_www_form(user_email.email)}&key=#{user_email.verification_key}")
-      assert redirected_to(conn) == "/"
-      assert get_flash(conn, :info) =~ "verified"
-
-      conn = publish_package(user)
-      assert conn.status == 201
-    end
+    # test "create user sends mails and requires confirmation" do
+    #   params = %{username: Fake.sequence(:username), email: Fake.sequence(:email), password: "passpass"}
+    #   conn = json_post(build_conn(), "api/users", params)
+    #
+    #   assert conn.status == 201
+    #   user = Hexpm.Repo.get_by!(User, username: params.username) |> Hexpm.Repo.preload(:emails)
+    #   user_email = List.first(user.emails)
+    #
+    #   [email] = Bamboo.SentEmail.all
+    #   assert email.subject =~ "Hex.pm"
+    #   assert email.html_body =~ "email/verify?username=#{params.username}&email=#{URI.encode_www_form(user_email.email)}&key=#{user_email.verification_key}"
+    #
+    #   conn = publish_package(user)
+    #   assert json_response(conn, 403)["message"] == "email not verified"
+    #
+    #   conn = get(build_conn(), "email/verify?username=#{params.username}&email=#{URI.encode_www_form(user_email.email)}&key=#{user_email.verification_key}")
+    #   assert redirected_to(conn) == "/"
+    #   assert get_flash(conn, :info) =~ "verified"
+    #
+    #   conn = publish_package(user)
+    #   assert conn.status == 201
+    # end
 
     test "create user validates" do
       params = %{username: Fake.sequence(:username), password: "passpass"}
