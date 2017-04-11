@@ -1,6 +1,8 @@
 use Mix.Config
 
 config :hexpm,
+  docs_url:    System.get_env("HEX_DOCS_URL") || "http://localhost:4000",
+  cdn_url:     System.get_env("HEX_CDN_URL")  || "http://localhost:4000",
   cookie_sign_salt: "lYEJ7Wc8jFwNrPke", # System.get_env("HEX_COOKIE_SIGNING_SALT"),
   cookie_encr_salt: "TZDiyTeFQ819hsC3", # System.get_env("HEX_COOKIE_ENCRYPTION_SALT")
   secret: "796f75666f756e64746865686578", # System.get_env("HEX_SECRET")
