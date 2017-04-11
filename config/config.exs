@@ -20,6 +20,8 @@ config :hexpm,
   cookie_sign_salt: "lYEJ7Wc8jFwNrPke",
   cookie_encr_salt: "TZDiyTeFQ819hsC3",
   skip_email_verify: true,
+  github_url:       System.get_env("GITHUB_URL") || "https://github.com/hexpm/hexpm",
+  support_email:    System.get_env("SUPPORT_EMAIL") || "support@hex.pm",
 
   store_impl:   store,
   s3_url:       System.get_env("HEX_S3_URL") || "https://s3.amazonaws.com",
@@ -36,7 +38,6 @@ config :hexpm,
   fastly_key:     System.get_env("HEX_FASTLY_KEY"),
   fastly_hexdocs: System.get_env("HEX_FASTLY_HEXDOCS"),
   fastly_hexrepo: System.get_env("HEX_FASTLY_HEXREPO"),
-  support_email:  "support@hex.pm",
 
   levenshtein_threshold: System.get_env("HEX_LEVENSHTEIN_THRESHOLD") || 2
 

@@ -5,7 +5,7 @@
         <div class="container">
           <ul>
             <li>
-              <a href="https://github.com/hexpm">github</a>
+              <a href="<%= Application.get_env(:hexpm, :github_url) %>">github</a>
             </li>
             <li>
               <a href="<%= policy_path(Endpoint, :index) %>">policies</a>
@@ -14,7 +14,7 @@
               <a href="<%= page_path(Endpoint, :sponsors) %>">sponsors</a>
             </li>
             <li>
-              <a href="mailto:support@hex.pm">support</a>
+              <a href="mailto:<%= Application.get_env(:hexpm, :support_email) %>">support</a>
             </li>
           </ul>
         </div>
