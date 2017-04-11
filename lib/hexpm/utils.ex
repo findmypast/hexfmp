@@ -156,7 +156,7 @@ defmodule Hexpm.Utils do
     docs_url([package.name, to_string(release.version)])
   end
   def docs_url(path) do
-    Application.get_env(:hexpm, :docs_url) <> "/" <> Path.join(List.wrap(path)) <> "/"
+    Application.get_env(:hexpm, :docs_url) <> "/" <> Path.join(List.wrap(path)) <> "/index.html"
   end
 
   @doc """
@@ -167,7 +167,7 @@ defmodule Hexpm.Utils do
     repo    = Application.get_env(:hexpm, :cdn_url)
     package = package.name
     version = to_string(release.version)
-    "#{repo}/docs/#{package}-#{version}.tar.gz"
+    "#{repo}/docs/#{package}-#{version}.tar"
   end
 
   @doc """

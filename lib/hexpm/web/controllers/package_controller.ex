@@ -69,7 +69,7 @@ defmodule Hexpm.Web.PackageController do
     docs_assigns =
       cond do
         type == :package and Enum.any?(releases, &(&1.has_docs)) ->
-          [hexdocs_url: Hexpm.Utils.docs_url([package.name]),
+          [hexdocs_url: Hexpm.Utils.docs_url(package, release),
            docs_tarball_url: Hexpm.Utils.docs_tarball_url(package, release)]
         type == :release and release.has_docs ->
           [hexdocs_url: Hexpm.Utils.docs_url(package, release),

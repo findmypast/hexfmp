@@ -105,7 +105,9 @@ defmodule Hexpm.Web.Router do
   end
 
   scope "/docs", Hexpm.Web do
+    get "/:package/:version/:dir/*asset", TestController, :docs_assets
     get "/:package/:version/*page", TestController, :docs_page
+    get "/:ball",                   TestController, :tarball
     get "/sitemap.xml",             TestController, :docs_sitemap
   end
 

@@ -1,8 +1,6 @@
 use Mix.Config
 
 config :hexpm,
-  docs_url:    System.get_env("HEX_DOCS_URL") || "http://localhost:4000",
-  cdn_url:     System.get_env("HEX_CDN_URL")  || "http://localhost:4000",
   secret:      System.get_env("HEX_SECRET")   || "796f75666f756e64746865686578",
   private_key: File.read!("test/fixtures/private.pem")
 
@@ -35,7 +33,8 @@ config :hexpm, Hexpm.Repo,
   username: "postgres",
   password: "postgres",
   database: "hexpm_dev",
-  hostname: "hexfmp_postgres_dev", #localhost
+  # hostname: "hexfmp_postgres_dev",
+  hostname: "localhost",
   pool_size: 5
 
 config :ex_statsd,

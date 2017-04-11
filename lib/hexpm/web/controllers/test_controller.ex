@@ -38,6 +38,12 @@ defmodule Hexpm.Web.TestController do
     |> send_object(conn)
   end
 
+  def docs_assets(conn, params) do
+    path = Path.join([params["package"], params["version"], params["dir"], params["asset"]])
+    Hexpm.Store.get(nil, :docs_bucket, path, [])
+    |> send_object(conn)
+  end
+
   def docs_page(conn, params) do
     path = Path.join([params["package"], params["version"], params["page"]])
     Hexpm.Store.get(nil, :docs_bucket, path, [])
