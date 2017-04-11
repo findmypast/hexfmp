@@ -2,17 +2,21 @@ defmodule Hexpm.Emails.Mailer do
   use Bamboo.Mailer, otp_app: :hexpm
 
   def deliver_now_throttled(email) do
-    ses_rate = Application.get_env(:hexpm, :ses_rate) |> String.to_integer
+    if Application.get_env(:hexpm, :skip_email_verify) do
+      :ok
+    else
+      ses_rate = Application.get_env(:hexpm, :ses_rate) |> String.to_integer
 
-    email
-    |> recipients
-    |> recipient_chunks(ses_rate)
-    |> Enum.each(fn chunk ->
-      Hexpm.Throttle.wait(Hexpm.SESThrottle, length(chunk))
       email
-      |> Bamboo.Email.to(chunk)
-      |> Hexpm.Emails.Mailer.deliver_now
-    end)
+      |> recipients
+      |> recipient_chunks(ses_rate)
+      |> Enum.each(fn chunk ->
+        Hexpm.Throttle.wait(Hexpm.SESThrottle, length(chunk))
+        email
+        |> Bamboo.Email.to(chunk)
+        |> Hexpm.Emails.Mailer.deliver_now
+      end)
+    end
   end
 
   defp recipient_chunks(recipients, limit),
