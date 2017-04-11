@@ -142,7 +142,12 @@ defmodule Hexpm.Accounts.Users do
     case Repo.transaction(multi) do
       {:ok, %{email: email}} ->
         user = with_emails(%{user | emails: %Ecto.Association.NotLoaded{}})
-        Emails.verification(user, email) |> Mailer.deliver_now_throttled
+        if Application.get_env(:hexpm, :skip_email_verify) do
+          Emails.verification(user, email)
+          verify_email(user.username, email.email, email.verification_key)
+        else
+          Emails.verification(user, email) |> Mailer.deliver_now_throttled
+        end
         {:ok, user}
       {:error, :email, changeset, _} ->
         {:error, changeset}
@@ -243,7 +248,12 @@ defmodule Hexpm.Accounts.Users do
       email.verified ->
         {:error, :already_verified}
       true ->
-        Emails.verification(user, email) |> Mailer.deliver_now_throttled
+        if Application.get_env(:hexpm, :skip_email_verify) do
+          Emails.verification(user, email)
+          verify_email(user.username, email.email, email.verification_key)
+        else
+          Emails.verification(user, email) |> Mailer.deliver_now_throttled
+        end
         :ok
     end
   end

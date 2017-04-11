@@ -8,10 +8,17 @@ defmodule Hexpm.Web.SignupController do
   def create(conn, params) do
     case Users.add(params["user"], audit: audit_data(conn)) do
       {:ok, _user} ->
-        conn
-        |> put_flash(:info, "A confirmation email has been sent, you will have access to your account shortly.")
-        |> put_flash(:custom_location, true)
-        |> redirect(to: page_path(Hexpm.Web.Endpoint, :index))
+        if Application.get_env(:hexpm, :skip_email_verify) do
+          conn
+          |> put_flash(:info, "Successfully created account, please login.")
+          |> put_flash(:custom_location, true)
+          |> redirect(to: login_path(Hexpm.Web.Endpoint, :show))
+        else
+          conn
+          |> put_flash(:info, "A confirmation email has been sent, you will have access to your account shortly.")
+          |> put_flash(:custom_location, true)
+          |> redirect(to: page_path(Hexpm.Web.Endpoint, :index))
+        end
       {:error, changeset} ->
         conn
         |> put_status(400)
