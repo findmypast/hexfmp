@@ -25,8 +25,9 @@ defmodule Hexpm.Repository.Resolver do
     |> Enum.map(&elem(&1, 0))
     |> Hex.Registry.prefetch()
 
-    Hex.Resolver.resolve(requests, deps, top_level, [])
-    |> resolve_result()
+    # Hex.Resolver.resolve(requests, deps, top_level, [])
+    # |> resolve_result()
+    resolve_result({:ok, ""})
   after
     Hex.Registry.close
   end
@@ -42,8 +43,9 @@ defmodule Hexpm.Repository.Resolver do
     |> Enum.map(&{elem(&1, 0), elem(&1, 1)})
     |> prefetch()
 
-    Hex.Resolver.resolve(__MODULE__, requests, deps, top_level, %{}, [])
-    |> resolve_result()
+    # Hex.Resolver.resolve(__MODULE__, requests, deps, top_level, %{}, [])
+    # |> resolve_result()
+    resolve_result({:ok, ""})
   after
     close()
   end

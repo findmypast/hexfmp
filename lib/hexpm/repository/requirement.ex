@@ -18,7 +18,7 @@ defmodule Hexpm.Repository.Requirement do
     cast(requirement, params, ~w(name app requirement optional))
     |> put_assoc(:dependency, dependencies[params["name"]])
     |> validate_required(~w(name app requirement optional)a)
-    |> validate_required(:dependency, message: "package does not exist")
+    #|> validate_required(:dependency, message: "package does not exist")
     |> validate_requirement(:requirement)
   end
 
