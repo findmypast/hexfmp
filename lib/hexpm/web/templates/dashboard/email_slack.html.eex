@@ -7,11 +7,11 @@
 
   <div class="col-md-9 email">
     <div class="panel panel-default">
-      <div class="panel-heading">Slack names</div>
+      <div class="panel-heading">Slack targets</div>
       <div class="panel-body">
         <p>
-          The <strong>primary</strong> slack name will be used when Hexfmp communicates with you.
-          The <strong>public</strong> slack name will be displayed on your profile page.
+          The <strong>primary</strong> slack target will be used when Hexfmp communicates with you.
+          The <strong>public</strong> slack target will be displayed on your profile page.
         </p>
       </div>
       <ul class="list-group">
@@ -57,7 +57,7 @@
 
         <li class="list-group-item">
           <%= form_for @add_email_changeset, dashboard_path(Endpoint, :add_email), [method: :post], fn f -> %>
-            <%= label f, :email, "Add slack name" %>
+            <%= label f, :email, "Add slack target" %>
             <div class="form-group">
               <%= text_input f, :email, class: "form-control" %>
               <%= error_tag f, :email %>

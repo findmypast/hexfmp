@@ -83,7 +83,7 @@ defmodule Hexpm.Web.DashboardController do
       :ok ->
         if Application.get_env(:hexpm, :slack) do
           conn
-          |> put_flash(:info, "Removed slack name #{email} from your account.")
+          |> put_flash(:info, "Removed slack target #{email} from your account.")
           |> redirect(to: dashboard_path(conn, :email))
         else
           conn
@@ -105,7 +105,7 @@ defmodule Hexpm.Web.DashboardController do
       :ok ->
         if Application.get_env(:hexpm, :slack) do
           conn
-          |> put_flash(:info, "Your primary slack name was changed to #{email}.")
+          |> put_flash(:info, "Your primary slack target was changed to #{email}.")
           |> redirect(to: dashboard_path(conn, :email))
         else
           conn
@@ -127,7 +127,7 @@ defmodule Hexpm.Web.DashboardController do
       :ok ->
         if Application.get_env(:hexpm, :slack) do
           conn
-          |> put_flash(:info, "Your public slack name was changed to #{email}.")
+          |> put_flash(:info, "Your public slack target was changed to #{email}.")
           |> redirect(to: dashboard_path(conn, :email))
         else
           conn
@@ -212,10 +212,10 @@ defmodule Hexpm.Web.DashboardController do
   end
 
   if Application.get_env(:hexpm, :slack) do
-    defp email_error_message(:unknown_email, email), do: "Unknown slack name #{email}."
-    defp email_error_message(:not_verified, email), do: "Slack name #{email} not verified."
-    defp email_error_message(:already_verified, email), do: "Slack name #{email} already verified."
-    defp email_error_message(:primary, email), do: "Cannot remove primary slack name #{email}."
+    defp email_error_message(:unknown_email, email), do: "Unknown slack target #{email}."
+    defp email_error_message(:not_verified, email), do: "Slack target #{email} not verified."
+    defp email_error_message(:already_verified, email), do: "Slack target #{email} already verified."
+    defp email_error_message(:primary, email), do: "Cannot remove primary slack target #{email}."
   else
     defp email_error_message(:unknown_email, email), do: "Unknown email #{email}."
     defp email_error_message(:not_verified, email), do: "Email #{email} not verified."

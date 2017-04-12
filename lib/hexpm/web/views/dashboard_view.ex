@@ -23,7 +23,7 @@ defmodule Hexpm.Web.DashboardView do
     emails = Email.order_emails(user.emails)
 
     if Application.get_env(:hexpm, :slack) do
-      [{"Don't show a slack name", "none"}] ++
+      [{"Don't show a slack target", "none"}] ++
         Enum.filter_map(emails, & &1.verified, &{&1.email, &1.email})
     else
       [{"Don't show a public email address", "none"}] ++

@@ -19,13 +19,13 @@
 
       <%= inputs_for f, :emails, [append: [%Email{}]], fn f -> %>
         <div class="form-group">
-          <%= label f, :email, "Slack name" %>
+          <%= label f, :email, "Slack target" %>
           <%= text_input f, :email %>
           <%= error_tag f, :email %>
         </div>
 
         <div class="form-group">
-          <%= label f, :email_confirmation, "Slack name confirmation" %>
+          <%= label f, :email_confirmation, "Slack target confirmation" %>
           <%= text_input f, :email_confirmation %>
           <%= error_tag f, :email_confirmation %>
         </div>

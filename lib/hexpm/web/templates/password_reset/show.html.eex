@@ -4,7 +4,11 @@
       <h2>Reset your password</h2>
 
       <div class="form-group">
-        <label for="username">Username or Email</label>
+        <%= if Application.get_env(:hexpm, :slack) do %>
+          <label for="username">Username or Slack target</label>
+        <%= else %>
+          <label for="username">Username or Email</label>
+        <%= end %>
         <input type="text" class="form-control" name="username">
       </div>
 
