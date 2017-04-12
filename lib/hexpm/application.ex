@@ -1,6 +1,9 @@
 defmodule Hexpm.Application do
   use Application
 
+  alias Hexpm.Vault.Raider
+  alias Hexpm.Slack.SlackRtm
+
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
@@ -19,9 +22,24 @@ defmodule Hexpm.Application do
 
     File.mkdir_p(tmp_dir)
     shutdown_on_eof()
+    slack()
 
     opts = [strategy: :one_for_one, name: Hexpm.Supervisor]
     launch(children, opts)
+  end
+
+  if Mix.env == :prod do
+    defp slack do
+      with {:ok, token} <- Raider.raid_vault(System.get_env("SLACK_TOKEN_VAULT_KEY")),
+           {:ok, slack_rtm_pid} <- Slack.Bot.start_link(Hexpm.Slack.SlackRtm, [], token),
+        do: Application.put_env(:hexpm, :slack_rtm, slack_rtm_pid)
+    end
+  else
+    defp slack, do: nil
+    # defp slack do
+    #   with {:ok, slack_rtm_pid} <- Slack.Bot.start_link(Hexpm.Slack.SlackRtm, [], System.get_env("SLACK_TOKEN")),
+    #     do: Application.put_env(:hexpm, :slack_rtm, slack_rtm_pid)
+    # end
   end
 
   defp launch(children, opts) do

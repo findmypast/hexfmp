@@ -23,7 +23,11 @@
     <h4><%= @user.full_name %></h4>
     <ul class="user-profile-list">
       <%= if @public_email do %>
-        <li><a href="mailto:<%= @public_email %>"><%= @public_email %></a></li>
+        <%= if Application.get_env(:hexpm, :slack) do %>
+          <li><b>Slack name:</b> <%= @public_email %></li>
+        <% else %>
+          <li><a href="mailto:<%= @public_email %>"><%= @public_email %></a></li>
+        <% end %>
       <% end %>
       <%= for {service, handle, url} <- handles(@user) do %>
         <li><a href="<%= url %>"><%= handle %></a> on <%= service %></li>

@@ -8,11 +8,11 @@ defmodule Hexpm.Web.SignupController do
   def create(conn, params) do
     case Users.add(params["user"], audit: audit_data(conn)) do
       {:ok, _user} ->
-        if Application.get_env(:hexpm, :skip_email_verify) do
+        if Application.get_env(:hexpm, :slack) do
           conn
-          |> put_flash(:info, "Successfully created account, please login.")
+          |> put_flash(:info, "A confirmation message has been sent to you via slack, check your private messages.")
           |> put_flash(:custom_location, true)
-          |> redirect(to: login_path(Hexpm.Web.Endpoint, :show))
+          |> redirect(to: page_path(Hexpm.Web.Endpoint, :index))
         else
           conn
           |> put_flash(:info, "A confirmation email has been sent, you will have access to your account shortly.")
@@ -27,10 +27,18 @@ defmodule Hexpm.Web.SignupController do
   end
 
   defp render_show(conn, changeset) do
-    render conn, "show.html", [
-      title: "Sign up",
-      container: "container page signup",
-      changeset: changeset
-    ]
+    if Application.get_env(:hexpm, :slack) do
+      render conn, "show_slack.html", [
+        title: "Sign up",
+        container: "container page signup",
+        changeset: changeset
+      ]
+    else
+      render conn, "show.html", [
+        title: "Sign up",
+        container: "container page signup",
+        changeset: changeset
+      ]
+    end
   end
 end

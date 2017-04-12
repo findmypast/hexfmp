@@ -23,6 +23,7 @@ services:
       - DB_PASSWORD_VAULT_KEY=$DB_ADMIN_PASSWORD_VAULT_KEY
       - DB_HOSTNAME_VAULT_KEY=$DB_HOSTNAME_VAULT_KEY
       - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
+      - SLACK_TOKEN_VAULT_KEY=$SLACK_TOKEN_VAULT_KEY
     restart: always
     networks:
       - this_host_services

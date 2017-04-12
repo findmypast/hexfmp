@@ -14,6 +14,7 @@ defmodule Hexpm.Accounts.Email do
   end
 
   @email_regex ~r"^.+@.+\..+$"
+  @slack_regex ~r"^@\S+$"
 
   def changeset(email, type, params, verified? \\ not Application.get_env(:hexpm, :user_confirm))
 
@@ -24,16 +25,29 @@ defmodule Hexpm.Accounts.Email do
   end
 
   def changeset(email, :create, params, verified?) do
-    cast(email, params, ~w(email))
-    |> validate_required(~w(email)a)
-    |> update_change(:email, &String.downcase/1)
-    |> validate_format(:email, @email_regex)
-    |> validate_confirmation(:email, message: "does not match email")
-    |> validate_verified_email_exists(:email, message: "email already in use")
-    |> unique_constraint(:email, name: "emails_email_key")
-    |> unique_constraint(:email, name: "emails_email_user_key")
-    |> put_change(:verified, verified?)
-    |> put_change(:verification_key, Auth.gen_key())
+    if Application.get_env(:hexpm, :slack) do
+      cast(email, params, ~w(email))
+      |> validate_required(~w(email)a)
+      |> update_change(:email, &String.downcase/1)
+      |> validate_format(:email, @slack_regex, message: "Slack name must start with an @ and contain no spaces.")
+      |> validate_confirmation(:email, message: "does not match slack name")
+      |> validate_verified_email_exists(:email, message: "slack name already in use")
+      |> unique_constraint(:email, name: "emails_email_key")
+      |> unique_constraint(:email, name: "emails_email_user_key")
+      |> put_change(:verified, verified?)
+      |> put_change(:verification_key, Auth.gen_key())
+    else
+      cast(email, params, ~w(email))
+      |> validate_required(~w(email)a)
+      |> update_change(:email, &String.downcase/1)
+      |> validate_format(:email, @email_regex)
+      |> validate_confirmation(:email, message: "does not match email")
+      |> validate_verified_email_exists(:email, message: "email already in use")
+      |> unique_constraint(:email, name: "emails_email_key")
+      |> unique_constraint(:email, name: "emails_email_user_key")
+      |> put_change(:verified, verified?)
+      |> put_change(:verification_key, Auth.gen_key())
+    end
   end
 
   def verify?(nil, _key),

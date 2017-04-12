@@ -1,6 +1,8 @@
 defmodule Hexpm.Repository.Owners do
   use Hexpm.Web, :context
 
+  alias Hexpm.Slack.Slacker
+
   def all(package, preload \\ []) do
     from(u in assoc(package, :owners), preload: ^preload)
     |> Repo.all
@@ -16,7 +18,12 @@ defmodule Hexpm.Repository.Owners do
       {:ok, _} ->
         owners = package |> all |> Users.with_emails
         owner = Enum.find(owners, &(&1.id == owner.id))
-        Emails.owner_added(package, owners, owner) |> Mailer.deliver_now_throttled
+
+        if Application.get_env(:hexpm, :slack) do
+          Slacker.owner_added(package, owners, owner)
+        else
+          Emails.owner_added(package, owners, owner) |> Mailer.deliver_now_throttled
+        end
         :ok
       {:error, :owner, changeset, _} ->
         {:error, changeset}
@@ -36,7 +43,12 @@ defmodule Hexpm.Repository.Owners do
 
       {:ok, _} = Repo.transaction(multi)
       owner = Enum.find(owners, &(&1.id == owner.id))
-      Emails.owner_removed(package, owners, owner) |> Mailer.deliver_now_throttled
+
+      if Application.get_env(:hexpm, :slack) do
+        Slacker.owner_removed(package, owners, owner)
+      else
+        Emails.owner_removed(package, owners, owner) |> Mailer.deliver_now_throttled
+      end
       :ok
     end
   end

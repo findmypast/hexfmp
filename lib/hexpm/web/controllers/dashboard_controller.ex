@@ -59,9 +59,15 @@ defmodule Hexpm.Web.DashboardController do
     case Users.add_email(user, params["email"], audit: audit_data(conn)) do
       {:ok, _user} ->
         email = params["email"]["email"]
-        conn
-        |> put_flash(:info, "A verification email has been sent to #{email}.")
-        |> redirect(to: dashboard_path(conn, :email))
+        if Application.get_env(:hexpm, :slack) do
+          conn
+          |> put_flash(:info, "A verification slack message has been sent to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        else
+          conn
+          |> put_flash(:info, "A verification email has been sent to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        end
       {:error, changeset} ->
         conn
         |> put_status(400)
@@ -75,9 +81,15 @@ defmodule Hexpm.Web.DashboardController do
 
     case Users.remove_email(user, params, audit: audit_data(conn)) do
       :ok ->
-        conn
-        |> put_flash(:info, "Removed email #{email} from your account.")
-        |> redirect(to: dashboard_path(conn, :email))
+        if Application.get_env(:hexpm, :slack) do
+          conn
+          |> put_flash(:info, "Removed slack name #{email} from your account.")
+          |> redirect(to: dashboard_path(conn, :email))
+        else
+          conn
+          |> put_flash(:info, "Removed email #{email} from your account.")
+          |> redirect(to: dashboard_path(conn, :email))
+        end
       {:error, reason} ->
         conn
         |> put_flash(:error, email_error_message(reason, email))
@@ -91,9 +103,15 @@ defmodule Hexpm.Web.DashboardController do
 
     case Users.primary_email(user, params, audit: audit_data(conn)) do
       :ok ->
-        conn
-        |> put_flash(:info, "Your primary email was changed to #{email}.")
-        |> redirect(to: dashboard_path(conn, :email))
+        if Application.get_env(:hexpm, :slack) do
+          conn
+          |> put_flash(:info, "Your primary slack name was changed to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        else
+          conn
+          |> put_flash(:info, "Your primary email was changed to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        end
       {:error, reason} ->
         conn
         |> put_flash(:error, email_error_message(reason, email))
@@ -107,9 +125,15 @@ defmodule Hexpm.Web.DashboardController do
 
     case Users.public_email(user, params, audit: audit_data(conn)) do
       :ok ->
-        conn
-        |> put_flash(:info, "Your public email was changed to #{email}.")
-        |> redirect(to: dashboard_path(conn, :email))
+        if Application.get_env(:hexpm, :slack) do
+          conn
+          |> put_flash(:info, "Your public slack name was changed to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        else
+          conn
+          |> put_flash(:info, "Your public email was changed to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        end
       {:error, reason} ->
         conn
         |> put_flash(:error, email_error_message(reason, email))
@@ -123,9 +147,15 @@ defmodule Hexpm.Web.DashboardController do
 
     case Users.resend_verify_email(user, params) do
       :ok ->
-        conn
-        |> put_flash(:info, "A verification email has been sent to #{email}.")
-        |> redirect(to: dashboard_path(conn, :email))
+        if Application.get_env(:hexpm, :slack) do
+          conn
+          |> put_flash(:info, "A verification slack message has been sent to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        else
+          conn
+          |> put_flash(:info, "A verification email has been sent to #{email}.")
+          |> redirect(to: dashboard_path(conn, :email))
+        end
       {:error, reason} ->
         conn
         |> put_flash(:error, email_error_message(reason, email))
@@ -134,11 +164,19 @@ defmodule Hexpm.Web.DashboardController do
   end
 
   defp render_profile(conn, changeset) do
-    render conn, "profile.html", [
-      title: "Dashboard - Public profile",
-      container: "container page dashboard",
-      changeset: changeset
-    ]
+    if Application.get_env(:hexpm, :slack) do
+      render conn, "profile_slack.html", [
+        title: "Dashboard - Public profile",
+        container: "container page dashboard",
+        changeset: changeset
+      ]
+    else
+      render conn, "profile.html", [
+        title: "Dashboard - Public profile",
+        container: "container page dashboard",
+        changeset: changeset
+      ]
+    end
   end
 
   defp render_password(conn, changeset) do
@@ -152,20 +190,36 @@ defmodule Hexpm.Web.DashboardController do
   defp render_email(conn, user, add_email_changeset \\ add_email_changeset()) do
     emails = Email.order_emails(user.emails)
 
-    render conn, "email.html", [
-      title: "Dashboard - Email",
-      container: "container page dashboard",
-      add_email_changeset: add_email_changeset,
-      emails: emails
-    ]
+    if Application.get_env(:hexpm, :slack) do
+      render conn, "email_slack.html", [
+        title: "Dashboard - Slack",
+        container: "container page dashboard",
+        add_email_changeset: add_email_changeset,
+        emails: emails
+      ]
+    else
+      render conn, "email.html", [
+        title: "Dashboard - Email",
+        container: "container page dashboard",
+        add_email_changeset: add_email_changeset,
+        emails: emails
+      ]
+    end
   end
 
   defp add_email_changeset do
     Email.changeset(%Email{}, :create, %{}, false)
   end
 
-  defp email_error_message(:unknown_email, email), do: "Unknown email #{email}."
-  defp email_error_message(:not_verified, email), do: "Email #{email} not verified."
-  defp email_error_message(:already_verified, email), do: "Email #{email} already verified."
-  defp email_error_message(:primary, email), do: "Cannot remove primary email #{email}."
+  if Application.get_env(:hexpm, :slack) do
+    defp email_error_message(:unknown_email, email), do: "Unknown slack name #{email}."
+    defp email_error_message(:not_verified, email), do: "Slack name #{email} not verified."
+    defp email_error_message(:already_verified, email), do: "Slack name #{email} already verified."
+    defp email_error_message(:primary, email), do: "Cannot remove primary slack name #{email}."
+  else
+    defp email_error_message(:unknown_email, email), do: "Unknown email #{email}."
+    defp email_error_message(:not_verified, email), do: "Email #{email} not verified."
+    defp email_error_message(:already_verified, email), do: "Email #{email} already verified."
+    defp email_error_message(:primary, email), do: "Cannot remove primary email #{email}."
+  end
 end

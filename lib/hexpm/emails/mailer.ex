@@ -2,7 +2,7 @@ defmodule Hexpm.Emails.Mailer do
   use Bamboo.Mailer, otp_app: :hexpm
 
   def deliver_now_throttled(email) do
-    if Application.get_env(:hexpm, :skip_email_verify) do
+    if Application.get_env(:hexpm, :slack) do
       :ok
     else
       ses_rate = Application.get_env(:hexpm, :ses_rate) |> String.to_integer

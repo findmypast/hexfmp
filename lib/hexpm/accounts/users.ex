@@ -1,6 +1,8 @@
 defmodule Hexpm.Accounts.Users do
   use Hexpm.Web, :context
 
+  alias Hexpm.Slack.Slacker
+
   def get(username_or_email, preload \\ []) do
     User.get(username_or_email, preload)
     |> Repo.one
@@ -29,9 +31,8 @@ defmodule Hexpm.Accounts.Users do
 
     case Repo.transaction(multi) do
       {:ok, %{user: %{emails: [email]} = user}} ->
-        if Application.get_env(:hexpm, :skip_email_verify) do
-          Emails.verification(user, email)
-          verify_email(user.username, email.email, email.verification_key)
+        if Application.get_env(:hexpm, :slack) do
+          Slacker.verification(user, email)
         else
           Emails.verification(user, email) |> Mailer.deliver_now_throttled
         end
@@ -101,10 +102,16 @@ defmodule Hexpm.Accounts.Users do
         |> audit(audit_data, "password.reset.init", nil)
         |> Repo.transaction
 
-      user
-      |> with_emails
-      |> Emails.password_reset_request
-      |> Mailer.deliver_now_throttled
+      if Application.get_env(:hexpm, :slack) do
+        user
+        |> with_emails
+        |> Slacker.password_reset_request
+      else
+        user
+        |> with_emails
+        |> Emails.password_reset_request
+        |> Mailer.deliver_now_throttled
+      end
 
       :ok
     else
@@ -142,9 +149,8 @@ defmodule Hexpm.Accounts.Users do
     case Repo.transaction(multi) do
       {:ok, %{email: email}} ->
         user = with_emails(%{user | emails: %Ecto.Association.NotLoaded{}})
-        if Application.get_env(:hexpm, :skip_email_verify) do
-          Emails.verification(user, email)
-          verify_email(user.username, email.email, email.verification_key)
+        if Application.get_env(:hexpm, :slack) do
+          Slacker.verification(user, email)
         else
           Emails.verification(user, email) |> Mailer.deliver_now_throttled
         end
@@ -248,9 +254,8 @@ defmodule Hexpm.Accounts.Users do
       email.verified ->
         {:error, :already_verified}
       true ->
-        if Application.get_env(:hexpm, :skip_email_verify) do
-          Emails.verification(user, email)
-          verify_email(user.username, email.email, email.verification_key)
+        if Application.get_env(:hexpm, :slack) do
+          Slacker.verification(user, email)
         else
           Emails.verification(user, email) |> Mailer.deliver_now_throttled
         end

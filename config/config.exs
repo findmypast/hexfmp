@@ -19,7 +19,7 @@ config :hexpm,
   private_key:      System.get_env("HEX_SIGNING_KEY"),
   cookie_sign_salt: "lYEJ7Wc8jFwNrPke",
   cookie_encr_salt: "TZDiyTeFQ819hsC3",
-  skip_email_verify: true,
+  slack:            true,
   github_url:       System.get_env("GITHUB_URL") || "https://github.com/hexpm/hexpm",
   support_email:    System.get_env("SUPPORT_EMAIL") || "support@hex.pm",
 

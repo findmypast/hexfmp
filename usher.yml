@@ -36,6 +36,7 @@ vars:
     - DB_DATABASE_VAULT_KEY=<%=environment%>/db_database
     - DB_ADMIN_USERNAME_VAULT_KEY=<%=environment%>/db_admin_username
     - DB_ADMIN_PASSWORD_VAULT_KEY=<%=environment%>/db_admin_password
+    - SLACK_TOKEN_VAULT_KEY=<%=environment%>/slack_token
 
   lb_docker_environment: &LB_DOCKER_ENV
     - DOCKER_TLS_VERIFY=1

@@ -13,7 +13,16 @@ defmodule Hexpm.Web.PasswordResetController do
 
     render conn, "create.html", [
       title: "Reset your password",
-      container: "container page password-view"
+      container: "container page password-view",
+      communication: communication_method()
     ]
+  end
+
+  defp communication_method do
+    if Application.get_env(:hexpm, :slack) do
+      "a slack message"
+    else
+      "an email"
+    end
   end
 end
