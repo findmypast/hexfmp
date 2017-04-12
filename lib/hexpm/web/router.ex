@@ -94,6 +94,13 @@ defmodule Hexpm.Web.Router do
     get "/installs/hex.ez", InstallController,    :archive
   end
 
+  scope "/docs", Hexpm.Web do
+    get "/:package/:version/:dir/*asset", TestController, :docs_assets
+    get "/:package/:version/*page", TestController, :docs_page
+    get "/:ball",                   TestController, :tarball
+    get "/sitemap.xml",             TestController, :docs_sitemap
+  end
+  
   scope "/repo", Hexpm.Web do
     get "/registry.ets.gz",        TestController, :registry
     get "/registry.ets.gz.signed", TestController, :registry_signed
@@ -102,13 +109,6 @@ defmodule Hexpm.Web.Router do
     get "/packages/:package",      TestController, :package
     get "/tarballs/:ball",         TestController, :tarball
     get "/installs/hex-1.x.csv",   TestController, :installs_csv
-  end
-
-  scope "/docs", Hexpm.Web do
-    get "/:package/:version/:dir/*asset", TestController, :docs_assets
-    get "/:package/:version/*page", TestController, :docs_page
-    get "/:ball",                   TestController, :tarball
-    get "/sitemap.xml",             TestController, :docs_sitemap
   end
 
   scope "/api", Hexpm.Web.API, as: :api do

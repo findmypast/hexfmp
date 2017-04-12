@@ -3,6 +3,7 @@ defmodule Hexpm.Utils do
   Assorted utility functions.
   """
 
+  use Hexpm.Web, :view
   @timeout 60 * 60 * 1000
 
   import Ecto.Query, only: [from: 2]
@@ -153,7 +154,11 @@ defmodule Hexpm.Utils do
   @spec docs_url(Hexpm.Repository.Package.t, Hexpm.Repository.Release.t) :: String.t
   @spec docs_url([String.t] | String.t) :: String.t
   def docs_url(package, release) do
-    docs_url([package.name, to_string(release.version)])
+    if Application.get_env(:hexpm, :docs_url) do
+      docs_url([package.name, to_string(release.version)])
+    else
+      test_url(Hexpm.Web.Endpoint, :docs_page, package.name, to_string(release.version), ["index.html"])
+    end
   end
   def docs_url(path) do
     Application.get_env(:hexpm, :docs_url) <> "/" <> Path.join(List.wrap(path)) <> "/index.html"
@@ -164,10 +169,14 @@ defmodule Hexpm.Utils do
   """
   @spec docs_tarball_url(Hexpm.Repository.Package.t, Hexpm.Repository.Release.t) :: String.t
   def docs_tarball_url(package, release) do
-    repo    = Application.get_env(:hexpm, :cdn_url)
-    package = package.name
-    version = to_string(release.version)
-    "#{repo}/docs/#{package}-#{version}.tar"
+    if Application.get_env(:hexpm, :cdn_url) do
+      repo    = Application.get_env(:hexpm, :cdn_url)
+      package = package.name
+      version = to_string(release.version)
+      "#{repo}/docs/#{package}-#{version}.tar"
+    else
+      test_url(Hexpm.Web.Endpoint, :tarball, "#{package.name}-#{to_string(release.version)}.tar")
+    end
   end
 
   @doc """
@@ -182,15 +191,15 @@ defmodule Hexpm.Utils do
         $/x
   end
 
-  def paginate(query, page, count) when is_integer(page) and page > 0 do
+  def utils_paginate(query, page, count) when is_integer(page) and page > 0 do
     offset = (page - 1) * count
     from(var in query,
          offset: ^offset,
          limit: ^count)
   end
 
-  def paginate(query, _page, count) do
-    paginate(query, 1, count)
+  def utils_paginate(query, _page, count) do
+    utils_paginate(query, 1, count)
   end
 
   def shell(cmd) do

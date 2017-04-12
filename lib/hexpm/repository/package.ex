@@ -74,7 +74,7 @@ defmodule Hexpm.Repository.Package do
   def all(page, count, search \\ nil, sort \\ :name) do
     from(p in Package, preload: :downloads)
     |> sort(sort)
-    |> Hexpm.Utils.paginate(page, count)
+    |> Hexpm.Utils.utils_paginate(page, count)
     |> search(search)
   end
 
