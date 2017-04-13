@@ -8,7 +8,7 @@ config :hexpm,
 
 config :hexpm, Hexpm.Web.Endpoint,
   http: [port: 4000, ip: {0, 0, 0, 0}],
-  url: [host: System.get_env("PRODUCTION_URL")],
+  url: [host: System.get_env("PRODUCTION_URL"), port: 3333],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: "Cc2cUvbm9x/uPD01xnKmpmU93mgZuht5cTejKf/Z2x0MmfqE1ZgHJ1/hSZwd8u4L" # System.get_env("SECRET_KEY_BASE")
 
