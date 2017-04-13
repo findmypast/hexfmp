@@ -14,7 +14,6 @@ services:
       - SERVICE_NAME=$SERVICE_NAME
       - SERVICE_TAGS=$SERVICE_TAGS
       - SERVICE_NODE=$SERVICE_NODE
-      - HEX_URL=hex.pm
       - SERVICE_CHECK_HTTP=/
       - SERVICE_CHECK_INTERVAL=60s
       - SECRET_KEY_BASE
@@ -24,6 +23,8 @@ services:
       - DB_HOSTNAME_VAULT_KEY=$DB_HOSTNAME_VAULT_KEY
       - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
       - SLACK_TOKEN_VAULT_KEY=$SLACK_TOKEN_VAULT_KEY
+    volumes:
+      - cdn:/usr/src/app/tmp
     restart: always
     networks:
       - this_host_services
@@ -31,3 +32,7 @@ services:
 networks:
   this_host_services:
     external: true
+
+volumes:
+  cdn:
+    driver: local
