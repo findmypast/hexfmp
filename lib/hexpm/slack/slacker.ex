@@ -7,7 +7,7 @@ defmodule Hexpm.Slack.Slacker do
   end
 
   def verification(user, email) do
-    email_url(Hexpm.Web.Endpoint, :verify, username: user.username, email: email.email, key: email.verification_key)
+    email_path(Hexpm.Web.Endpoint, :verify, username: user.username, email: email.email, key: email.verification_key)
     |> verification_message
     |> send_to(email.email)
   end
@@ -19,7 +19,7 @@ defmodule Hexpm.Slack.Slacker do
   end
 
   def password_reset_request(user) do
-    password_url(Hexpm.Web.Endpoint, :show, username: user.username, key: user.reset_key)
+    password_path(Hexpm.Web.Endpoint, :show, username: user.username, key: user.reset_key)
     |> password_reset_message
     |> send_to(User.email(user, :primary))
   end

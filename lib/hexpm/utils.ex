@@ -157,7 +157,7 @@ defmodule Hexpm.Utils do
     if Application.get_env(:hexpm, :docs_url) do
       docs_url([package.name, to_string(release.version)])
     else
-      test_url(Hexpm.Web.Endpoint, :docs_page, package.name, to_string(release.version), ["index.html"])
+      test_path(Hexpm.Web.Endpoint, :docs_page, package.name, to_string(release.version), ["index.html"])
     end
   end
   def docs_url(path) do
@@ -175,7 +175,7 @@ defmodule Hexpm.Utils do
       version = to_string(release.version)
       "#{repo}/docs/#{package}-#{version}.tar"
     else
-      test_url(Hexpm.Web.Endpoint, :tarball, "#{package.name}-#{to_string(release.version)}.tar")
+      test_path(Hexpm.Web.Endpoint, :tarball, "#{package.name}-#{to_string(release.version)}.tar")
     end
   end
 

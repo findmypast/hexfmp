@@ -18,7 +18,6 @@ compatible_tools = Enum.flat_map(build_tools, &(Map.get(tool_compatibility, &1, 
                    |> Enum.uniq
 
 tools = Keyword.take(tools, compatible_tools)
-tarball_url = test_url(Hexpm.Web.Endpoint, :tarball, "#{@package.name}-#{to_string(@current_release.version)}.tar")
 %>
 
 <h2 class="package-title"><%= @package.name %>
@@ -57,18 +56,7 @@ tarball_url = test_url(Hexpm.Web.Endpoint, :tarball, "#{@package.name}-#{to_stri
         <li><a href="<%= link %>" rel="nofollow"><%= name %></a></li>
         <% end %>
         <%= if @hexdocs_url && @docs_tarball_url do %>
-          <li>
-            <%= if Application.get_env(:hexpm, :docs_url) do %>
-              <a href="<%= @hexdocs_url %>">Online documentation</a>
-            <% else %>
-              <a href="<%= test_url(Hexpm.Web.Endpoint, :docs_page, @package.name, to_string(@current_release.version), ["index.html"]) %>">Online documentation</a>
-            <% end %>
-            <%= if Application.get_env(:hexpm, :cdn_url) do %>
-              (<a href="<%= @docs_tarball_url %>">download</a>)
-            <% else %>
-              (<a href="<%= tarball_url %>">download</a>)
-            <% end %>
-          </li>
+        <li><a href="<%= @hexdocs_url %>">Online documentation</a> (<a href="<%= @docs_tarball_url %>">download</a>)</li>
         <% end %>
       </ul>
     <% end %>

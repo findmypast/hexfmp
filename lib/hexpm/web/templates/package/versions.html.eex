@@ -7,11 +7,7 @@
       (<span class="version-retirement">retired</span>)
     <% else %>
       <%= if release.has_docs do %>
-        <%= if Application.get_env(:hexpm, :docs_url) do %>
-          (<a href="<%= raw Hexpm.Utils.docs_url(@package, release) %>">docs</a>)
-        <% else %>
-          (<a href="<%= test_url(Hexpm.Web.Endpoint, :docs_page, @package.name, to_string(release.version), ["index.html"]) %>">docs</a>)
-        <% end %>
+        (<a href="<%= raw Hexpm.Utils.docs_url(@package, release) %>">docs</a>)
       <% end %>
     <% end %>
   </li>
