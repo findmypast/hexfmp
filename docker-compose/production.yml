@@ -25,7 +25,7 @@ services:
       - SLACK_TOKEN_VAULT_KEY=$SLACK_TOKEN_VAULT_KEY
       - PRODUCTION_URL=$PRODUCTION_URL
     volumes:
-      - cdn:/usr/src/app/tmp
+      - /var/lib/docker/volumes/hexfmp/tmp:/usr/src/app/tmp
     restart: always
     networks:
       - this_host_services
@@ -33,6 +33,3 @@ services:
 networks:
   this_host_services:
     external: true
-
-volumes:
-  cdn: {}
