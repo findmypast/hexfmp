@@ -23,6 +23,7 @@ services:
       - DB_HOSTNAME_VAULT_KEY=$DB_HOSTNAME_VAULT_KEY
       - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
       - SLACK_TOKEN_VAULT_KEY=$SLACK_TOKEN_VAULT_KEY
+      - PRODUCTION_URL=$PRODUCTION_URL
     volumes:
       - cdn:/usr/src/app/tmp
     restart: always

@@ -37,6 +37,7 @@ vars:
     - DB_ADMIN_USERNAME_VAULT_KEY=<%=environment%>/db_admin_username
     - DB_ADMIN_PASSWORD_VAULT_KEY=<%=environment%>/db_admin_password
     - SLACK_TOKEN_VAULT_KEY=<%=environment%>/slack_token
+    - PRODUCTION_URL=production.<%=base_service_name%>.service.consul
 
   lb_docker_environment: &LB_DOCKER_ENV
     - DOCKER_TLS_VERIFY=1
