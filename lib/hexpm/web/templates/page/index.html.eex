@@ -33,9 +33,8 @@
         <div class="instructions">
           <h3><a href="<%= docs_path(Endpoint, :fmp) %>">Using with FMP</a></h3>
           <p>
-            Add the FMP internal hex repo to your local hex configuration by running <code>mix hex.repo add hexfmp http://production.hexfmp.service.consul:3333/repo</code>.</br>
-            After configured, you can specify the repo of each dependency in your mix.exs deps function, e.g. <code>{:ex_http_common, ">= 0.0.0", repo: :hexfmp}</code>.</br>
-            More info on private repo usage <a href="<%= docs_path(Endpoint, :fmp) %>">here</a>.
+            Make sure you have the most up to date version of the hex client by running <code>mix local.hex</code>. </br>
+            Then be a good little developer, and religiously abide by the documentation <a href="<%= docs_path(Endpoint, :fmp) %>">here</a>.
           </p>
         </div>
       </div>

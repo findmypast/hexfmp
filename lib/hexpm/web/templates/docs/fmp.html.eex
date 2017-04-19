@@ -26,7 +26,8 @@ end
   </pre>
   Now <code>mix deps.get</code> should work as usual, pulling each dependency from the corresponding repo.</br></br>
 
-  Whilst <code>mix</code> does support multiple repos, it does not <i>yet</i> support multiple APIs. This means when interacting with the private hex repo for publishing / user configuration,</br>
+  Whilst <code>mix</code> does support multiple repos, it does not <i>yet</i> support multiple APIs.</br>
+  This means when interacting with the private hex repo for publishing / user configuration,</br>
   you must prepend all commands with <code>HEX_API_URL=http://production.hexfmp.service.consul:3333/api</code>,</br>
   e.g</br>
   <code>HEX_API_URL=http://production.hexfmp.service.consul:3333/api mix hex.publish</code></br></br>
@@ -42,23 +43,6 @@ function hexfmp_auth() {
 }
     </code>
   </pre>
-  Then run <code>source ~/.zshrc</code>. After which you should be able to run <code>hexfmp_auth</code> to authenticate, and <code>hexfmp_publish</code> (from your package root dir) to publish.</br></br>
-</p>
-<h3>Publishing</h3>
-<p>
-  <h3>--THIS IS SUPER IMPORTANT!--</h3>
-  When publishing to the internal repo, your <code>mix.exs</code> file <b>MUST</b> mark external/public dependencies by denoting their repo as <code>:hexpm</code>(the public hex repo), e.g.
-  <pre>
-    <code class="elixir">
-defp deps do
-  [
-    {:phoenix, "~> 1.3-rc", repo: :hexpm},
-    {:phoenix_ecto, "~> 3.1-rc", repo: :hexpm},
-    {:some_fmp_package, ">= 0.0.0", repo: :hexfmp},
-    {:ex_doc, ">= 0.0.0", only: :dev, repo: :hexpm},
-  ]
-end
-    </code>
-  </pre>
-  If not set this way, hex will look for those external dependencies in the private repo. This is because child dependencies will always be fetched from the same repository as the parent package, unless explicitly set otherwise.
+  Then either open a new terminal or run <code>source ~/.zshrc</code>. After which you should be able to run <code>hexfmp_auth</code> (it will prompt for user/pass) to authenticate, and <code>hexfmp_publish</code> (from your package root dir) to publish.</br></br>
+  For more information on publishing packages to the internal repo, go to the <a href="<%= docs_path(Endpoint, :publish) %>">Publishing packages</a> docs.
 </p>

@@ -2,33 +2,19 @@
   Publishing a package
 </h2>
 <p>
-  Publishing a package to Hex consists of registering a Hex user, adding metadata to the project's <code>mix.exs</code> file, and finally submitting the package with a <code>mix</code> task.
+  Publishing a package to Hexfmp consists of these steps:
+
+  <ul>
+    <li>Registering (if not already done so, go <a href="<%= signup_path(Endpoint, :show) %>">here</a>) a Hex user.</li>
+    <li>Authenticating on the command line as that user using <code>hexfmp_auth</code>(go to <a href="<%= docs_path(Endpoint, :fmp) %>">Hexfmp usage</a> to set this command up).</li>
+    <li>Adding metadata to the project's <code>mix.exs</code> file</li>
+    <li>Submitting the package using <code>hexfmp_publish</code>(go to <a href="<%= docs_path(Endpoint, :fmp) %>">Hexfmp usage</a> to set this command up).</li>
+  </ul>
 </p>
 
-<h3>Registering a Hex user</h3>
-
+<h3>Naming</h3>
 <p>
-  When registering a user, you will be prompted for a username, your email and a password. The email is used to confirm your identity during signup, as well as to contact you in case there is an issue with one of your packages. The email will never be shared with a third party.
-</p>
-
-<pre><code class="nohighlight">$ mix hex.user register
-Username: johndoe
-Email: john.doe@example.com
-Password:
-Password (confirm):
-Registering...
-Generating API key...
-You are required to confirm your email to access your account, a confirmation email has been sent to john.doe@example.com
-</code></pre>
-
-<p>
-  Once this step has been completed, check your email inbox for the confirmation email. Once you have followed the enclosed link, your account will be ready to use.
-</p>
-
-<h3>Naming your package</h3>
-
-<p>
-  Before publishing, you will have to choose the name of your package. Remember that packages published to Hex are public and can be accessed by anyone in the community. It is also the responsibility of the community to pick and encourage good package names. Here are some tips:
+  Before publishing, you will have to choose the name of your package. It is the responsibility of the community to pick and encourage good package names. Here are some tips:
 </p>
 
 <ul>
@@ -77,7 +63,24 @@ You are required to confirm your email to access your account, a confirmation em
 <h4>Dependencies</h4>
 
 <p>
-  A dependency defined with no SCM (<code>:git</code> or <code>:path</code>) will be automatically treated as a Hex dependency. See the <a href="/docs/usage">Usage guide</a> for more details.
+  <h3>--THIS IS SUPER IMPORTANT!--</h3>
+  When publishing to the internal repo, your <code>mix.exs</code> file <b>MUST</b> mark external/public dependencies by denoting their repo as <code>:hexpm</code>(the public hex repo), e.g.
+  <pre>
+    <code class="elixir">
+defp deps do
+  [
+    {:phoenix, "~> 1.3-rc", repo: :hexpm},
+    {:phoenix_ecto, "~> 3.1-rc", repo: :hexpm},
+    {:some_fmp_package, ">= 0.0.0", repo: :hexfmp},
+    {:ex_doc, ">= 0.0.0", only: :dev, repo: :hexpm},
+  ]
+end
+    </code>
+  </pre>
+  If not set this way, hex will look for those external dependencies in the private repo. This is because child dependencies will always be fetched from the same repository as the parent package, unless explicitly set otherwise.
+</p>
+<p>
+  A dependency defined with no SCM (<code>:git</code> or <code>:path</code>) will be automatically treated as a Hex dependency. Make sure the correct <code>repo:</code> is set for each dependency. See the <a href="/docs/usage">Usage guide</a> for more details.
 </p>
 
 <p>
@@ -106,8 +109,10 @@ You are required to confirm your email to access your account, a confirmation em
   end
 
   defp deps do
-    [{:decimal, "~> 0.2.0",
-      :ex_doc, github: "elixir-lang/ex_doc"}]
+    [{:decimal, "~> 0.2.0", repo: :hexpm},
+      {:some_fmp_package, "~> 0.2.0", repo: :hexfmp},
+      {:some_other_fmp_package, "~> 0.2.0", repo: :hexfmp},
+      {:ex_doc, github: "elixir-lang/ex_doc", repo: :hexpm}]
   end
 
   defp description do
@@ -131,10 +136,10 @@ end
 <h3>Submitting the package</h3>
 
 <p>
-  After the package metadata and dependencies have been added to <code>mix.exs</code>, we are ready to publish the package with the <code>mix hex.publish</code> command:
+  After the package metadata and dependencies have been added to <code>mix.exs</code>, we are ready to publish the package with the <code>hexfmp_publish</code>(go to <a href="<%= docs_path(Endpoint, :fmp) %>">Hexfmp usage</a> to set this command up) command:
 </p>
 
-<pre><code class="nohighlight">$ mix hex.publish
+<pre><code class="nohighlight">$ hexfmp_publish
 Publishing postgrex v0.4.0
   Dependencies:
     decimal ~> 0.1.0
@@ -153,13 +158,13 @@ Published postgrex v0.4.0
 </code></pre>
 
 <p>
-  Congratulations, you've published your package! It will appear on the <a href="https://hex.pm/">https://hex.pm</a> site and will be available to add as a dependency in other Mix projects.
+  Congratulations, you've published your package! It will appear on the <a href="http://production.hexfmp.service.consul:3333/">hexfmp</a> site and will be available to add as a dependency in other Mix projects, just make sure it is specified as a package in the hexfmp repo e.g. <code>{:some_fmp_package, "~> 0.2.0", repo: :hexfmp}</code>.
 </p>
 
 <p>
-  Please test your package after publishing by adding it as dependency to a Mix project and fetching and compiling it. If there are any issues, you can publish the package again for up to one hour after first publication. A publication can also be reverted with <code>mix hex.publish --revert VERSION</code>.
+  Please test your package after publishing by adding it as dependency to a Mix project and fetching and compiling it. If there are any issues, you can publish the package again with the same version for up to one hour after first publication. After which <code>:version</code> increments must occur between publishes.
 </p>
 
 <p>
-  When running the command to publish a package, Hex will create a tar file of all the files and directories listed in the <code>:files</code> property. When the tarball has been pushed to the Hex servers, it will be uploaded to a CDN for fast and reliable access for users. Hex will also recompile the registry file that all clients will update automatically when fetching dependencies.
+  When running the command to publish a package, Hex will create a tar file of all the files and directories listed in the <code>:files</code> property. Hex will also recompile the registry file that all clients will update automatically when fetching dependencies.
 </p>

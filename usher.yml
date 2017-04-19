@@ -38,6 +38,8 @@ vars:
     - DB_ADMIN_PASSWORD_VAULT_KEY=<%=environment%>/db_admin_password
     - SLACK_TOKEN_VAULT_KEY=<%=environment%>/slack_token
     - PRODUCTION_URL=production.<%=base_service_name%>.service.consul
+    - GITHUB_URL=https://github.com/findmypast/hexfmp
+    - SUPPORT_EMAIL=spanners@findmypast.com
 
   lb_docker_environment: &LB_DOCKER_ENV
     - DOCKER_TLS_VERIFY=1

@@ -24,6 +24,8 @@ services:
       - DB_DATABASE_VAULT_KEY=$DB_DATABASE_VAULT_KEY
       - SLACK_TOKEN_VAULT_KEY=$SLACK_TOKEN_VAULT_KEY
       - PRODUCTION_URL=$PRODUCTION_URL
+      - GITHUB_URL=$GITHUB_URL
+      - SUPPORT_EMAIL=$SUPPORT_EMAIL
     volumes:
       - /var/lib/docker/volumes/hexfmp/tmp:/usr/src/app/tmp
     restart: always
