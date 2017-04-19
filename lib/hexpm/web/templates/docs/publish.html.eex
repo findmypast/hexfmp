@@ -58,6 +58,7 @@
   <dd>A list of files and directories to include in the package. Has to include <code>mix.exs</code>. Defaults to standard project directories, so you usually don't need to set this property.</dd>
   <dt><code>:build_tools</code></dt>
   <dd>List of build tools that can build the package. It's very rare that you need to set this, as Hex tries to automatically detect the build tools based on the files in the package. If a "rebar" or "rebar.config" file is present Hex will mark it as able to build with rebar. This detection can be overridden by setting this field.</dd>
+<<<<<<< c0f0164bb7fe34dfa90babe6e4aecc946b01c169
 
 </dl>
 
@@ -74,6 +75,10 @@
 
  Consult the [ExDoc documentation](https://github.com/elixir-lang/ex_doc#using-exdoc-with-mix) for more information on improving the generated documentation.
 
+=======
+</dl>
+
+>>>>>>> updating docs after first demo with human being
 <h4>Dependencies</h4>
 
 <p>
@@ -115,9 +120,13 @@ end
      start_permanent: Mix.env == :prod,
      description: description(),
      package: package(),
+<<<<<<< c0f0164bb7fe34dfa90babe6e4aecc946b01c169
      deps: deps(),
      name: "Postgrex",
      source_url: "https://github.com/ericmj/postgrex"]
+=======
+     deps: deps()]
+>>>>>>> updating docs after first demo with human being
   end
 
   def application do
@@ -143,7 +152,12 @@ end
      files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
      maintainers: ["Eric Meadows-Jönsson", "José Valim"],
      licenses: ["Apache 2.0"],
+<<<<<<< c0f0164bb7fe34dfa90babe6e4aecc946b01c169
      links: %{"GitHub" => "https://github.com/ericmj/postgrex"]
+=======
+     links: %{"GitHub" => "https://github.com/ericmj/postgrex",
+              "Docs" => "http://ericmj.github.io/postgrex/"}]
+>>>>>>> updating docs after first demo with human being
   end
 end
 </code></pre>
