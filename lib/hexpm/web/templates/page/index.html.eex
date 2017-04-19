@@ -4,7 +4,7 @@
     <%= render Hexpm.Web.LayoutView, "_flash.html", conn: @conn %>
 
     <div class="search-form">
-      <h2>The package manager for the Erlang ecosystem</h2>
+      <h2>The package manager for the FMP Erlang ecosystem</h2>
 
       <div class="row">
         <div class="col-md-8 col-md-offset-2">
@@ -20,6 +20,23 @@
               </span>
             </div>
           <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="using-with-box fmp">
+      <div class="shadow"></div>
+      <div class="text-content clearfix">
+        <div class="side-box">
+          <div class="lang-symbol"></div>
+        </div>
+        <div class="instructions">
+          <h3><a href="<%= docs_path(Endpoint, :fmp) %>">Using with FMP</a></h3>
+          <p>
+            Add the FMP internal hex repo to your local hex configuration by running <code>mix hex.repo add hexfmp http://production.hexfmp.service.consul:3333/repo</code>.</br>
+            After configured, you can specify the repo of each dependency in your mix.exs deps function, e.g. <code>{:ex_http_common, ">= 0.0.0", repo: :hexfmp}</code>.</br>
+            More info on private repo usage <a href="<%= docs_path(Endpoint, :fmp) %>">here</a>.
+          </p>
         </div>
       </div>
     </div>

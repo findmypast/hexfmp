@@ -8,6 +8,13 @@ defmodule Hexpm.Web.DocsController do
     ]
   end
 
+  def fmp(conn, _params) do
+    render conn, "fmp.html", [
+      title: "Hexfmp usage",
+      container: "container page docs"
+    ]
+  end
+
   def rebar3_usage(conn, _params) do
     render conn, "rebar3_usage.html", [
       title: "Rebar3 usage",

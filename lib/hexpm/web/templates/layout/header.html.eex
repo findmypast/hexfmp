@@ -55,6 +55,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Documentation <b class="caret"></b></a>
               <ul class="dropdown-menu">
                 <li class="dropdown-header menu-dropdown-header">Mix</li>
+                <li><a href="<%= docs_path(Endpoint, :fmp) %>">Hexfmp usage</a></li>
                 <li><a href="<%= docs_path(Endpoint, :usage) %>">Usage</a></li>
                 <li><a href="<%= docs_path(Endpoint, :publish) %>">Publishing packages</a></li>
                 <li><a href="<%= docs_path(Endpoint, :tasks) %>">Tasks</a></li>

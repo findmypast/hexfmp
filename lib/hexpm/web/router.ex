@@ -69,6 +69,7 @@ defmodule Hexpm.Web.Router do
     post   "/dashboard/email/resend",  DashboardController, :resend_verify_email
 
     get  "/docs/usage",          DocsController, :usage
+    get  "/docs/fmp",            DocsController, :fmp
     get  "/docs/rebar3_usage",   DocsController, :rebar3_usage
     get  "/docs/publish",        DocsController, :publish
     get  "/docs/rebar3_publish", DocsController, :rebar3_publish
@@ -100,7 +101,7 @@ defmodule Hexpm.Web.Router do
     get "/:ball",                   TestController, :tarball
     get "/sitemap.xml",             TestController, :docs_sitemap
   end
-  
+
   scope "/repo", Hexpm.Web do
     get "/registry.ets.gz",        TestController, :registry
     get "/registry.ets.gz.signed", TestController, :registry_signed

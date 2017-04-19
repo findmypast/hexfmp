@@ -191,6 +191,29 @@
   }
 }
 
+.fmp .side-box {
+  background: $color-fmp-blue;
+
+  .lang-symbol {
+    background: $color-fmp-blue-light url("../images/fmp.png") center no-repeat;
+    background-size: 66px;
+
+    @include hdpi(2) {
+      background: $color-fmp-blue-light url("../images/fmp.png") center no-repeat;
+      background-size: 66px;
+    }
+
+    @include hdpi(3) {
+      background: $color-fmp-blue-light url("../images/fmp.png") center no-repeat;
+      background-size: 66px;
+    }
+
+    @include general-mobile {
+      background-size: 20px;
+    }
+  }
+}
+
 .home-stats {
   padding: 30px 0;
 
