@@ -34,7 +34,8 @@
           <h3><a href="<%= docs_path(Endpoint, :fmp) %>">Using with FMP</a></h3>
           <p>
             Make sure you have the most up to date version of the hex client by running <code>mix local.hex</code>. </br>
-            Then be a good little developer, and religiously abide by the documentation <a href="<%= docs_path(Endpoint, :fmp) %>">here</a>.
+            Then be a good little developer, and religiously abide by the documentation <a href="<%= docs_path(Endpoint, :fmp) %>">here</a>.</br>
+            For a fully fledged example of how to publish a package to Hexfmp, go <a href="https://github.com/findmypast/hextest#how-to-publish-a-hex-package-to-the-internal-hex-repo-and-influence-people">look at this spiffing example</a>.
           </p>
         </div>
       </div>
