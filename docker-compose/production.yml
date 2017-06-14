@@ -27,7 +27,7 @@ services:
       - GITHUB_URL=$GITHUB_URL
       - SUPPORT_EMAIL=$SUPPORT_EMAIL
     volumes:
-      - /var/lib/docker/volumes/hexfmp/tmp:/usr/src/app/tmp
+      - /var/lib/docker/volumes/hexfmp:/usr/src/app/tmp
     restart: always
     networks:
       - this_host_services
